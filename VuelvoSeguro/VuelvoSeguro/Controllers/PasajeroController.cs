@@ -20,13 +20,21 @@ namespace VuelvoSeguro.Controllers
             _userManager = userManager;
         }
 
+        // Inicio: botón "Volver a casa".
         public async Task<IActionResult> Index()
         {
-            var id = int.Parse(_userManager.GetUserId(User)!);
-            var pasajero = await _db.Users
-                .Include(u => u.Vehiculos)
-                .FirstAsync(u => u.Id == id);
-            return View(pasajero);
+            return View(await BuscarPasajeroAsync());
+        }
+
+        // Mis viajes (se completa con RF10 en el sprint 5).
+        public IActionResult Historial()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Perfil()
+        {
+            return View(await BuscarPasajeroAsync());
         }
 
         // RF03: el pasajero actualiza los datos de su vehículo.
@@ -75,8 +83,14 @@ namespace VuelvoSeguro.Controllers
             vehiculo.VencimientoSeguro = datos.VencimientoSeguro!.Value;
             await _db.SaveChangesAsync();
 
-            TempData["Mensaje"] = "Guardamos los datos de tu vehículo.";
-            return RedirectToAction(nameof(Index));
+            TempData["Mensaje"] = "Guardamos los datos de tu auto.";
+            return RedirectToAction(nameof(Perfil));
+        }
+
+        private Task<Usuario> BuscarPasajeroAsync()
+        {
+            var id = int.Parse(_userManager.GetUserId(User)!);
+            return _db.Users.Include(u => u.Vehiculos).FirstAsync(u => u.Id == id);
         }
 
         private Task<Vehiculo?> BuscarVehiculoAsync()

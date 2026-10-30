@@ -21,7 +21,7 @@ namespace VuelvoSeguro.Controllers
             {
                 return RedirectToAction("Index", "Pasajero");
             }
-            return View();
+            return RedirectToAction("Login", "Cuenta");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

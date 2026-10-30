@@ -1,40 +1,33 @@
 @model Usuario
 @{
     ViewData["Title"] = "Inicio";
+    ViewData["Nav"] = "inicio";
     var vehiculo = Model.Vehiculos.FirstOrDefault();
+    var seguroVigente = vehiculo?.TieneSeguroVigente(DateTime.Today) == true;
 }
 
-<div class="formulario">
-    <h3 class="mb-0">Hola, @Model.Nombre</h3>
-    <p class="text-body-secondary">¿Querés volver a casa?</p>
+<h4 class="mb-0">Hola, @Model.Nombre</h4>
+<p class="text-body-secondary">¿Querés volver a casa?</p>
 
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="dato">Destino (tu casa)</div>
-            <div>@Model.Direccion</div>
-        </div>
+@if (!seguroVigente)
+{
+    <div class="alert alert-warning small py-2">
+        Para pedir un viaje necesitás un auto con el seguro vigente.
+        <a asp-action="Vehiculo" class="alert-link">Actualizar mi auto</a>
     </div>
+}
 
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="dato">Tu vehículo</div>
-            @if (vehiculo is null)
-            {
-                <p class="mb-2">Todavía no cargaste tu vehículo.</p>
-            }
-            else
-            {
-                <div class="fw-semibold">@vehiculo.Marca @vehiculo.Modelo · Patente @vehiculo.Patente</div>
-                <div class="small text-body-secondary">
-                    Caja @(vehiculo.EsAutomatico ? "automática" : "manual") ·
-                    Seguro hasta @vehiculo.VencimientoSeguro.ToString("dd/MM/yyyy")
-                </div>
-                @if (!vehiculo.TieneSeguroVigente(DateTime.Today))
-                {
-                    <div class="alert alert-warning small py-2 mt-2 mb-0">El seguro está vencido. Actualizalo para poder publicar viajes.</div>
-                }
-            }
-            <a class="btn btn-outline-secondary btn-sm mt-2" asp-action="Vehiculo">Editar vehículo</a>
+<div class="text-center my-5">
+    @* Publicar el viaje (RF05) se habilita en el sprint 4. *@
+    <button type="button" class="btn btn-vs boton-casa" disabled>Volver<br>a casa</button>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <div class="d-flex gap-2 align-items-start py-1">
+            <span class="pin destino mt-1"></span>
+            <div><div class="dato">Destino (tu casa)</div><div>@Model.Direccion</div></div>
         </div>
     </div>
 </div>
+<p class="small text-body-secondary text-center">Con un clic vas a publicar el viaje. Un conductor va a buscarte y te lleva en tu auto.</p>

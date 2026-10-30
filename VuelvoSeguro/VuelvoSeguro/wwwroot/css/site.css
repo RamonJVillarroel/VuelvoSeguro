@@ -1,53 +1,66 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-}
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
-
-/* ---------- Colores de VuelvoSeguro (diseño original del prototipo) ---------- */
+/* VuelvoSeguro: estilos tomados del prototipo de pantallas (diseño original, azul oscuro y verde). */
 :root {
   --vs-navy: #0f2a4a;
   --vs-navy-2: #1c4270;
   --vs-green: #1f9d63;
   --vs-green-dark: #177a4c;
+  --vs-stage: #e9eef4;
+  --vs-phone: #ffffff;
+  --vs-frame: #0b1726;
+  --vs-pin: #0f2a4a;
+}
+[data-bs-theme="dark"] {
+  --vs-pin: #8fb4e0;
+  --vs-stage: #0d141d;
+  --vs-phone: #16202c;
+  --vs-frame: #000;
 }
 
-.barra-vs { background: var(--vs-navy); }
-.barra-vs .marca { font-weight: 700; }
-.barra-vs .marca span { color: #5fd69d; }
+body { background: var(--vs-stage); min-height: 100vh; }
 
+/* ---------- Marco de celular ---------- */
+.escenario { padding: 0; }
+.celular { width: 100%; max-width: 430px; margin: 0 auto; background: var(--vs-phone); min-height: 100vh; display: flex; flex-direction: column; }
+.celular .contenido { flex: 1; overflow-y: auto; padding: 1.25rem; }
+@media (min-width: 576px) {
+  .escenario { padding: 1.5rem 1rem 3rem; }
+  .celular { border: 10px solid var(--vs-frame); border-radius: 2.2rem; overflow: hidden; min-height: 760px; box-shadow: 0 20px 50px rgba(15,42,74,.25); }
+}
+.barra-app { background: var(--vs-navy); color: #fff; padding: .85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; }
+.barra-app .marca { font-weight: 700; font-size: 1.1rem; color: #fff; text-decoration: none; }
+.barra-app .marca span { color: #5fd69d; }
+.nav-inferior { display: flex; border-top: 1px solid var(--bs-border-color); background: var(--vs-phone); }
+.nav-inferior a { flex: 1; padding: .7rem 0 .8rem; font-size: .8rem; color: var(--bs-secondary-color); display: flex; flex-direction: column; align-items: center; gap: .15rem; text-decoration: none; }
+.nav-inferior a.activo { color: var(--vs-green); font-weight: 700; }
+.nav-inferior svg { width: 22px; height: 22px; }
+
+/* ---------- Componentes ---------- */
 .btn-vs { background: var(--vs-green); border-color: var(--vs-green); color: #fff; font-weight: 600; }
 .btn-vs:hover, .btn-vs:focus { background: var(--vs-green-dark); border-color: var(--vs-green-dark); color: #fff; }
 .btn-navy { background: var(--vs-navy); border-color: var(--vs-navy); color: #fff; font-weight: 600; }
 .btn-navy:hover { background: var(--vs-navy-2); color: #fff; }
 .btn-grande { padding: 1rem; font-size: 1.15rem; border-radius: .9rem; }
+.boton-casa { width: 220px; height: 220px; border-radius: 50%; font-size: 1.6rem; line-height: 1.2; box-shadow: 0 0 0 14px rgba(31,157,99,.15), 0 0 0 28px rgba(31,157,99,.07); }
+/* Hasta el sprint 4 el botón se muestra pero todavía no publica el viaje. */
+.boton-casa:disabled { --bs-btn-disabled-bg: var(--vs-green); --bs-btn-disabled-border-color: var(--vs-green); --bs-btn-disabled-color: #fff; --bs-btn-disabled-opacity: .85; }
+.pin { width: 18px; height: 18px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); display: inline-block; flex-shrink: 0; }
+.pin.origen { background: var(--vs-green); }
+.pin.destino { background: var(--vs-pin); }
+.avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--vs-navy-2); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 1.2rem; flex-shrink: 0; }
+.avatar.sm { width: 40px; height: 40px; font-size: .95rem; }
+.pasos { list-style: none; padding: 0; margin: 0; }
+.pasos li { display: flex; gap: .75rem; align-items: flex-start; padding: .45rem 0; color: var(--bs-secondary-color); }
+.pasos .punto { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--bs-border-color); display: grid; place-items: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; }
+.pasos li.hecho { color: var(--bs-body-color); }
+.pasos li.hecho .punto { background: var(--vs-green); border-color: var(--vs-green); color: #fff; }
+.pasos li.actual { color: var(--bs-body-color); font-weight: 600; }
+.pasos li.actual .punto { border-color: var(--vs-green); color: var(--vs-green); }
+.list-group-item.active { background: var(--vs-navy-2); border-color: var(--vs-navy-2); }
+.dato { font-size: .78rem; color: var(--bs-secondary-color); text-transform: uppercase; letter-spacing: .05em; }
 
-/* Formularios angostos, pensados para el celular. */
-.formulario { max-width: 480px; margin: 0 auto; }
-.dato { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--bs-secondary-color); }
+/* ---------- Administrador (escritorio) ---------- */
+.escritorio { max-width: 1100px; margin: 0 auto; background: var(--vs-phone); border-radius: .8rem; overflow: hidden; box-shadow: 0 20px 50px rgba(15,42,74,.18); border: 1px solid var(--bs-border-color); }
+.escritorio .lateral { background: var(--vs-navy); color: #fff; }
+.escritorio .lateral a { display: flex; justify-content: space-between; align-items: center; width: 100%; color: #dce7f3; padding: .6rem 1rem; border-radius: .5rem; text-decoration: none; }
+.escritorio .lateral a.activo { background: rgba(255,255,255,.12); color: #fff; font-weight: 600; }
+.escritorio .lateral span.deshabilitado { display: block; color: #7f95ad; padding: .6rem 1rem; }

@@ -57,49 +57,43 @@ namespace VuelvoSeguro.Controllers
         }
 
         [HttpGet]
-        public IActionResult Registro()
+        public IActionResult Registro(string rol = RegistroPaginaViewModel.RolPasajero)
         {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult RegistroPasajero()
-        {
-            return View(new RegistroPasajeroViewModel());
+            return View(new RegistroPaginaViewModel { Rol = rol });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegistroPasajero(RegistroPasajeroViewModel modelo)
+        public async Task<IActionResult> RegistroPasajero([Bind(Prefix = "Pasajero")] RegistroPasajeroViewModel datos)
         {
-            var patente = VehiculoViewModel.NormalizarPatente(modelo.Vehiculo.Patente ?? string.Empty);
+            var patente = VehiculoViewModel.NormalizarPatente(datos.Vehiculo.Patente ?? string.Empty);
             if (await _db.Vehiculos.AnyAsync(v => v.Patente == patente))
             {
-                ModelState.AddModelError("Vehiculo.Patente", "Ya hay un vehículo registrado con esa patente.");
+                ModelState.AddModelError("Pasajero.Vehiculo.Patente", "Ya hay un vehículo registrado con esa patente.");
             }
-            await ValidarDniAsync(modelo.Dni);
+            await ValidarDniAsync(datos.Dni, "Pasajero");
             if (!ModelState.IsValid)
             {
-                return View(modelo);
+                return View(nameof(Registro), new RegistroPaginaViewModel { Rol = RegistroPaginaViewModel.RolPasajero, Pasajero = datos });
             }
 
-            var usuario = CrearUsuario(modelo, EstadoUsuario.Activo);
-            usuario.Direccion = modelo.Direccion;
+            var usuario = CrearUsuario(datos, EstadoUsuario.Activo);
+            usuario.Direccion = datos.Direccion;
 
             // Usuario y vehículo se guardan juntos: si algo falla, no queda nada a medias.
             await using var transaccion = await _db.Database.BeginTransactionAsync();
-            if (!await CrearCuentaAsync(usuario, modelo.Password, Rol.Pasajero))
+            if (!await CrearCuentaAsync(usuario, datos.Password, Rol.Pasajero))
             {
-                return View(modelo);
+                return View(nameof(Registro), new RegistroPaginaViewModel { Rol = RegistroPaginaViewModel.RolPasajero, Pasajero = datos });
             }
 
             _db.Vehiculos.Add(new Vehiculo
             {
-                Marca = modelo.Vehiculo.Marca,
-                Modelo = modelo.Vehiculo.Modelo,
+                Marca = datos.Vehiculo.Marca,
+                Modelo = datos.Vehiculo.Modelo,
                 Patente = patente,
-                EsAutomatico = modelo.Vehiculo.EsAutomatico,
-                VencimientoSeguro = modelo.Vehiculo.VencimientoSeguro!.Value,
+                EsAutomatico = datos.Vehiculo.EsAutomatico,
+                VencimientoSeguro = datos.Vehiculo.VencimientoSeguro!.Value,
                 PropietarioId = usuario.Id
             });
             await _db.SaveChangesAsync();
@@ -109,27 +103,21 @@ namespace VuelvoSeguro.Controllers
             return RedirectToAction("Index", "Pasajero");
         }
 
-        [HttpGet]
-        public IActionResult RegistroConductor()
-        {
-            return View(new RegistroConductorViewModel());
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegistroConductor(RegistroConductorViewModel modelo)
+        public async Task<IActionResult> RegistroConductor([Bind(Prefix = "Conductor")] RegistroConductorViewModel datos)
         {
-            await ValidarDniAsync(modelo.Dni);
+            await ValidarDniAsync(datos.Dni, "Conductor");
             if (!ModelState.IsValid)
             {
-                return View(modelo);
+                return View(nameof(Registro), new RegistroPaginaViewModel { Rol = RegistroPaginaViewModel.RolConductor, Conductor = datos });
             }
 
             // El conductor queda Pendiente hasta que el administrador lo apruebe.
-            var usuario = CrearUsuario(modelo, EstadoUsuario.Pendiente);
-            if (!await CrearCuentaAsync(usuario, modelo.Password, Rol.Conductor))
+            var usuario = CrearUsuario(datos, EstadoUsuario.Pendiente);
+            if (!await CrearCuentaAsync(usuario, datos.Password, Rol.Conductor))
             {
-                return View(modelo);
+                return View(nameof(Registro), new RegistroPaginaViewModel { Rol = RegistroPaginaViewModel.RolConductor, Conductor = datos });
             }
 
             await _signInManager.SignInAsync(usuario, isPersistent: false);
@@ -166,11 +154,11 @@ namespace VuelvoSeguro.Controllers
             };
         }
 
-        private async Task ValidarDniAsync(string dni)
+        private async Task ValidarDniAsync(string dni, string prefijo)
         {
             if (!string.IsNullOrEmpty(dni) && await _userManager.Users.AnyAsync(u => u.Dni == dni))
             {
-                ModelState.AddModelError(nameof(RegistroViewModel.Dni), "Ya existe una cuenta con ese DNI.");
+                ModelState.AddModelError($"{prefijo}.{nameof(RegistroViewModel.Dni)}", "Ya existe una cuenta con ese DNI.");
             }
         }
 

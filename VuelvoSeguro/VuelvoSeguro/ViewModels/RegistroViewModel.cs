@@ -61,4 +61,15 @@ namespace VuelvoSeguro.ViewModels
     public class RegistroConductorViewModel : RegistroViewModel
     {
     }
+
+    // Pantalla única de registro con el selector "Soy pasajero / Soy conductor", como en el prototipo.
+    public class RegistroPaginaViewModel
+    {
+        public const string RolPasajero = "pasajero";
+        public const string RolConductor = "conductor";
+
+        public string Rol { get; set; } = RolPasajero;
+        public RegistroPasajeroViewModel Pasajero { get; set; } = new();
+        public RegistroConductorViewModel Conductor { get; set; } = new();
+    }
 }

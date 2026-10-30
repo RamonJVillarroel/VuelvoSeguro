@@ -1,13 +1,56 @@
+@model RegistroPaginaViewModel
 @{
     ViewData["Title"] = "Crear cuenta";
+    var esPasajero = Model.Rol != RegistroPaginaViewModel.RolConductor;
 }
 
-<div class="formulario">
-    <h2 class="mb-1">Crear cuenta</h2>
-    <p class="text-body-secondary">Elegí cómo vas a usar VuelvoSeguro.</p>
-    <div class="d-grid gap-3">
-        <a class="btn btn-vs btn-grande" asp-action="RegistroPasajero">Soy pasajero</a>
-        <a class="btn btn-navy btn-grande" asp-action="RegistroConductor">Soy conductor</a>
-    </div>
-    <p class="text-center mt-4">¿Ya tenés cuenta? <a asp-action="Login">Iniciá sesión</a></p>
+<h4 class="mb-1">Crear cuenta</h4>
+<p class="text-body-secondary small">Elegí cómo vas a usar VuelvoSeguro.</p>
+<div class="btn-group w-100 mb-3" role="group" aria-label="Rol">
+    <input type="radio" class="btn-check" name="rol" id="rolP" value="pasajero" checked="@esPasajero">
+    <label class="btn btn-outline-success" for="rolP">Soy pasajero</label>
+    <input type="radio" class="btn-check" name="rol" id="rolC" value="conductor" checked="@(!esPasajero)">
+    <label class="btn btn-outline-success" for="rolC">Soy conductor</label>
 </div>
+
+<form asp-action="RegistroPasajero" method="post" id="formPasajero" class="@(esPasajero ? "" : "d-none")">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+    <partial name="_DatosPersonales" for="Pasajero" />
+
+    <h6 class="mt-3">Dirección de tu casa <span class="text-danger">*</span></h6>
+    <p class="small text-body-secondary mb-2">Es el destino de todos tus viajes. Por eso pedir un viaje lleva un solo clic.</p>
+    <div class="mb-3">
+        <input asp-for="Pasajero.Direccion" class="form-control" autocomplete="street-address" aria-label="Dirección de tu casa" />
+        <span asp-validation-for="Pasajero.Direccion" class="text-danger small"></span>
+    </div>
+
+    <h6>Datos de tu auto <span class="text-danger">*</span></h6>
+    <p class="small text-body-secondary mb-2">El conductor maneja tu auto para llevarte.</p>
+    <partial name="_CamposVehiculo" for="Pasajero.Vehiculo" />
+
+    <button class="btn btn-vs btn-grande w-100" type="submit">Crear cuenta</button>
+</form>
+
+<form asp-action="RegistroConductor" method="post" id="formConductor" class="@(esPasajero ? "d-none" : "")">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+    <partial name="_DatosPersonales" for="Conductor" />
+
+    <div class="alert alert-info small py-2">Un administrador revisa tus datos antes de que puedas aceptar viajes.</div>
+    <button class="btn btn-vs btn-grande w-100" type="submit">Crear cuenta</button>
+</form>
+
+<p class="text-center mt-3">¿Ya tenés cuenta? <a asp-action="Login">Iniciá sesión</a></p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Selector "Soy pasajero / Soy conductor": muestra el formulario que corresponde.
+        document.querySelectorAll('input[name="rol"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                var esPasajero = this.value === 'pasajero';
+                document.getElementById('formPasajero').classList.toggle('d-none', !esPasajero);
+                document.getElementById('formConductor').classList.toggle('d-none', esPasajero);
+            });
+        });
+    </script>
+}
