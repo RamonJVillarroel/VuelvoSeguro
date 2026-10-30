@@ -1,0 +1,85 @@
+/* VuelvoSeguro: estilos tomados del prototipo de pantallas (diseño original, azul oscuro y verde). */
+:root {
+  --vs-navy: #0f2a4a;
+  --vs-navy-2: #1c4270;
+  --vs-green: #1f9d63;
+  --vs-green-dark: #177a4c;
+  --vs-stage: #e9eef4;
+  --vs-phone: #ffffff;
+  --vs-frame: #0b1726;
+  --vs-pin: #0f2a4a;
+}
+[data-bs-theme="dark"] {
+  --vs-pin: #8fb4e0;
+  --vs-stage: #0d141d;
+  --vs-phone: #16202c;
+  --vs-frame: #000;
+}
+
+body { background: var(--vs-stage); min-height: 100vh; }
+
+/* ---------- Estructura de la app (responsive) ----------
+   Celular: pantalla completa con barra superior y navegación inferior, como el prototipo.
+   Tablet y escritorio (>= 768px): la navegación pasa a la barra superior y el contenido
+   se muestra en un panel centrado. */
+.app { min-height: 100vh; display: flex; flex-direction: column; background: var(--vs-phone); }
+.barra-app { background: var(--vs-navy); color: #fff; padding: .85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; }
+.barra-app .marca { font-weight: 700; font-size: 1.1rem; color: #fff; text-decoration: none; }
+.barra-app .marca span { color: #5fd69d; }
+.app > .barra-app { position: sticky; top: 0; z-index: 10; }
+.barra-interior { width: 100%; max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.nav-superior { gap: .25rem; margin-right: auto; margin-left: 1.5rem; }
+.nav-superior a { color: #dce7f3; padding: .4rem .8rem; border-radius: .5rem; display: flex; align-items: center; gap: .4rem; text-decoration: none; }
+.nav-superior a:hover { color: #fff; }
+.nav-superior a.activo { background: rgba(255,255,255,.12); color: #fff; font-weight: 600; }
+.nav-superior svg { width: 18px; height: 18px; }
+.contenido { flex: 1; padding: 1.25rem 1rem; }
+.contenedor { max-width: 960px; margin: 0 auto; }
+.contenedor.medio { max-width: 720px; }
+.contenedor.angosto { max-width: 520px; }
+.nav-inferior { display: flex; border-top: 1px solid var(--bs-border-color); background: var(--vs-phone); position: sticky; bottom: 0; }
+.nav-inferior a { flex: 1; padding: .7rem 0 .8rem; font-size: .8rem; color: var(--bs-secondary-color); display: flex; flex-direction: column; align-items: center; gap: .15rem; text-decoration: none; }
+.nav-inferior a.activo { color: var(--vs-green); font-weight: 700; }
+.nav-inferior svg { width: 22px; height: 22px; }
+@media (min-width: 768px) {
+  .app { background: var(--vs-stage); }
+  .contenido { padding: 2rem 1.5rem 3rem; }
+  .contenedor { background: var(--vs-phone); border: 1px solid var(--bs-border-color); border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 30px rgba(15,42,74,.08); }
+}
+
+/* ---------- Componentes ---------- */
+.btn-vs { background: var(--vs-green); border-color: var(--vs-green); color: #fff; font-weight: 600; }
+.btn-vs:hover, .btn-vs:focus { background: var(--vs-green-dark); border-color: var(--vs-green-dark); color: #fff; }
+.btn-navy { background: var(--vs-navy); border-color: var(--vs-navy); color: #fff; font-weight: 600; }
+.btn-navy:hover { background: var(--vs-navy-2); color: #fff; }
+.btn-grande { padding: 1rem; font-size: 1.15rem; border-radius: .9rem; }
+.boton-casa { width: min(220px, 60vw); height: min(220px, 60vw); border-radius: 50%; font-size: 1.6rem; line-height: 1.2; box-shadow: 0 0 0 14px rgba(31,157,99,.15), 0 0 0 28px rgba(31,157,99,.07); }
+/* Hasta el sprint 4 el botón se muestra pero todavía no publica el viaje. */
+.boton-casa:disabled { --bs-btn-disabled-bg: var(--vs-green); --bs-btn-disabled-border-color: var(--vs-green); --bs-btn-disabled-color: #fff; --bs-btn-disabled-opacity: .85; }
+.pin { width: 18px; height: 18px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.3); display: inline-block; flex-shrink: 0; }
+.pin.origen { background: var(--vs-green); }
+.pin.destino { background: var(--vs-pin); }
+.avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--vs-navy-2); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 1.2rem; flex-shrink: 0; }
+.avatar.sm { width: 40px; height: 40px; font-size: .95rem; }
+.pasos { list-style: none; padding: 0; margin: 0; }
+.pasos li { display: flex; gap: .75rem; align-items: flex-start; padding: .45rem 0; color: var(--bs-secondary-color); }
+.pasos .punto { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--bs-border-color); display: grid; place-items: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; }
+.pasos li.hecho { color: var(--bs-body-color); }
+.pasos li.hecho .punto { background: var(--vs-green); border-color: var(--vs-green); color: #fff; }
+.pasos li.actual { color: var(--bs-body-color); font-weight: 600; }
+.pasos li.actual .punto { border-color: var(--vs-green); color: var(--vs-green); }
+.list-group-item.active { background: var(--vs-navy-2); border-color: var(--vs-navy-2); }
+.dato { font-size: .78rem; color: var(--bs-secondary-color); text-transform: uppercase; letter-spacing: .05em; }
+
+/* ---------- Administrador (escritorio) ---------- */
+.escritorio { max-width: 1100px; margin: 0 auto; background: var(--vs-phone); border-radius: .8rem; overflow: hidden; box-shadow: 0 20px 50px rgba(15,42,74,.18); border: 1px solid var(--bs-border-color); }
+.escritorio .lateral { background: var(--vs-navy); color: #fff; }
+.escritorio .lateral a { display: flex; justify-content: space-between; align-items: center; width: 100%; color: #dce7f3; padding: .6rem 1rem; border-radius: .5rem; text-decoration: none; }
+.escritorio .lateral a.activo { background: rgba(255,255,255,.12); color: #fff; font-weight: 600; }
+.escritorio .lateral span.deshabilitado { display: block; color: #7f95ad; padding: .6rem 1rem; }
+@media (max-width: 767.98px) {
+  /* En el celular el menú lateral pasa a ser una fila de pestañas arriba del contenido. */
+  .escritorio { border: 0; border-radius: 0; box-shadow: none; min-height: 100vh; }
+  .escritorio .lateral { display: flex; gap: .25rem; overflow-x: auto; }
+  .escritorio .lateral a, .escritorio .lateral span.deshabilitado { width: auto; white-space: nowrap; }
+}

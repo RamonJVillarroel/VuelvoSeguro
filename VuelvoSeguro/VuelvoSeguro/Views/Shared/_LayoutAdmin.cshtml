@@ -1,0 +1,45 @@
+@{
+    var seccion = ViewData["Seccion"] as string;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VuelvoSeguro</title>
+    <partial name="_Tema" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="p-md-4">
+        <div class="escritorio">
+            <div class="barra-app">
+                <div class="marca">Vuelvo<span>Seguro</span> <small class="fw-normal opacity-75 d-none d-sm-inline">· Administración</small></div>
+                <form asp-controller="Cuenta" asp-action="Logout" method="post">
+                    <button type="submit" class="btn btn-sm btn-outline-light">Cerrar sesión</button>
+                </form>
+            </div>
+            <div class="row g-0">
+                <div class="col-md-3 lateral p-2">
+                    <a asp-controller="Admin" asp-action="Index" class="@(seccion == "conductores" ? "activo" : "")">
+                        Conductores pendientes
+                        @if (ViewData["Pendientes"] is int pendientes && pendientes > 0)
+                        {
+                            <span class="badge rounded-pill text-bg-warning ms-1">@pendientes</span>
+                        }
+                    </a>
+                    <span class="deshabilitado">Viajes</span>
+                    <span class="deshabilitado">Usuarios</span>
+                </div>
+                <main class="col-md-9 p-3 p-md-4" role="main">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

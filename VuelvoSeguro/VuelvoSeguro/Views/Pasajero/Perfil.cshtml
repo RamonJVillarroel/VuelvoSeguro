@@ -1,0 +1,34 @@
+@model Usuario
+@{
+    ViewData["Title"] = "Perfil";
+    ViewData["Ancho"] = "medio";
+    ViewData["Nav"] = "perfil";
+    var vehiculo = Model.Vehiculos.FirstOrDefault();
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <div class="avatar">@($"{Model.Nombre.FirstOrDefault()}{Model.Apellido.FirstOrDefault()}".ToUpper())</div>
+    <div><div class="fw-bold fs-5">@Model.NombreCompleto</div><div class="small text-body-secondary">@Model.Email</div></div>
+</div>
+<div class="list-group mb-3">
+    <div class="list-group-item"><div class="dato">Teléfono</div>@Model.PhoneNumber</div>
+    <div class="list-group-item"><div class="dato">Dirección de mi casa</div>@Model.Direccion</div>
+    <div class="list-group-item">
+        <div class="dato">Mi auto</div>
+        @if (vehiculo is null)
+        {
+            <span class="text-body-secondary">Sin cargar</span>
+        }
+        else
+        {
+            <div>@vehiculo.Marca @vehiculo.Modelo · @vehiculo.Patente</div>
+            <div class="small text-body-secondary">
+                Caja @(vehiculo.EsAutomatico ? "automática" : "manual") · Seguro hasta @vehiculo.VencimientoSeguro.ToString("dd/MM/yyyy")
+            </div>
+        }
+    </div>
+</div>
+<a class="btn btn-outline-secondary w-100 mb-2" asp-action="Vehiculo">Editar mi auto</a>
+<form asp-controller="Cuenta" asp-action="Logout" method="post">
+    <button type="submit" class="btn btn-outline-danger w-100">Cerrar sesión</button>
+</form>

@@ -1,0 +1,34 @@
+@model VehiculoViewModel
+
+<div class="row g-2 mb-2">
+    <div class="col-6">
+        <label asp-for="Marca" class="form-label"></label>
+        <input asp-for="Marca" class="form-control" />
+        <span asp-validation-for="Marca" class="text-danger small"></span>
+    </div>
+    <div class="col-6">
+        <label asp-for="Modelo" class="form-label"></label>
+        <input asp-for="Modelo" class="form-control" />
+        <span asp-validation-for="Modelo" class="text-danger small"></span>
+    </div>
+</div>
+<div class="row g-2 mb-2">
+    <div class="col-6">
+        <label asp-for="Patente" class="form-label"></label>
+        <input asp-for="Patente" class="form-control text-uppercase" placeholder="AB 123 CD" />
+        <span asp-validation-for="Patente" class="text-danger small"></span>
+    </div>
+    <div class="col-6">
+        <label asp-for="EsAutomatico" class="form-label"></label>
+        <select asp-for="EsAutomatico" class="form-select">
+            <option value="false">Manual</option>
+            <option value="true">Automática</option>
+        </select>
+    </div>
+</div>
+<div class="mb-3">
+    <label asp-for="VencimientoSeguro" class="form-label"></label>
+    <input asp-for="VencimientoSeguro" class="form-control" />
+    <span asp-validation-for="VencimientoSeguro" class="text-danger small"></span>
+    <div class="form-text">Sin seguro vigente no vas a poder publicar viajes.</div>
+</div>

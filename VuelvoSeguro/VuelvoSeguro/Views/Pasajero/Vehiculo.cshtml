@@ -1,0 +1,19 @@
+@model VehiculoViewModel
+@{
+    ViewData["Title"] = "Mi auto";
+    ViewData["Ancho"] = "medio";
+    ViewData["Nav"] = "perfil";
+}
+
+<h4 class="mb-1">Mi auto</h4>
+<p class="small text-body-secondary">El conductor maneja tu auto para llevarte.</p>
+<form asp-action="Vehiculo" method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+    <partial name="_CamposVehiculo" model="Model" />
+    <button type="submit" class="btn btn-vs btn-grande w-100 mb-2">Guardar</button>
+    <a class="btn btn-outline-secondary w-100" asp-action="Perfil">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
