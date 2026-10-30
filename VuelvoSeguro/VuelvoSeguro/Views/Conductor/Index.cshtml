@@ -1,0 +1,17 @@
+@model Usuario
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="formulario text-center my-4">
+    <h3>Hola, @Model.Nombre</h3>
+    @if (Model.EstadoUsuarioId == EstadoUsuario.Aprobado)
+    {
+        <p class="text-body-secondary">Tu cuenta está aprobada.</p>
+    }
+    else
+    {
+        <span class="badge text-bg-warning fs-6 mb-3">@Model.EstadoUsuario?.NombreEstado</span>
+        <p class="text-body-secondary">Un administrador tiene que aprobar tu cuenta antes de que puedas ver y aceptar viajes.</p>
+    }
+</div>

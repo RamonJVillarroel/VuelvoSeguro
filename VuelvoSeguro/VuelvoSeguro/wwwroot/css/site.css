@@ -29,3 +29,25 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* ---------- Colores de VuelvoSeguro (diseño original del prototipo) ---------- */
+:root {
+  --vs-navy: #0f2a4a;
+  --vs-navy-2: #1c4270;
+  --vs-green: #1f9d63;
+  --vs-green-dark: #177a4c;
+}
+
+.barra-vs { background: var(--vs-navy); }
+.barra-vs .marca { font-weight: 700; }
+.barra-vs .marca span { color: #5fd69d; }
+
+.btn-vs { background: var(--vs-green); border-color: var(--vs-green); color: #fff; font-weight: 600; }
+.btn-vs:hover, .btn-vs:focus { background: var(--vs-green-dark); border-color: var(--vs-green-dark); color: #fff; }
+.btn-navy { background: var(--vs-navy); border-color: var(--vs-navy); color: #fff; font-weight: 600; }
+.btn-navy:hover { background: var(--vs-navy-2); color: #fff; }
+.btn-grande { padding: 1rem; font-size: 1.15rem; border-radius: .9rem; }
+
+/* Formularios angostos, pensados para el celular. */
+.formulario { max-width: 480px; margin: 0 auto; }
+.dato { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--bs-secondary-color); }

@@ -1,0 +1,40 @@
+@model Usuario
+@{
+    ViewData["Title"] = "Inicio";
+    var vehiculo = Model.Vehiculos.FirstOrDefault();
+}
+
+<div class="formulario">
+    <h3 class="mb-0">Hola, @Model.Nombre</h3>
+    <p class="text-body-secondary">¿Querés volver a casa?</p>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="dato">Destino (tu casa)</div>
+            <div>@Model.Direccion</div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="dato">Tu vehículo</div>
+            @if (vehiculo is null)
+            {
+                <p class="mb-2">Todavía no cargaste tu vehículo.</p>
+            }
+            else
+            {
+                <div class="fw-semibold">@vehiculo.Marca @vehiculo.Modelo · Patente @vehiculo.Patente</div>
+                <div class="small text-body-secondary">
+                    Caja @(vehiculo.EsAutomatico ? "automática" : "manual") ·
+                    Seguro hasta @vehiculo.VencimientoSeguro.ToString("dd/MM/yyyy")
+                </div>
+                @if (!vehiculo.TieneSeguroVigente(DateTime.Today))
+                {
+                    <div class="alert alert-warning small py-2 mt-2 mb-0">El seguro está vencido. Actualizalo para poder publicar viajes.</div>
+                }
+            }
+            <a class="btn btn-outline-secondary btn-sm mt-2" asp-action="Vehiculo">Editar vehículo</a>
+        </div>
+    </div>
+</div>

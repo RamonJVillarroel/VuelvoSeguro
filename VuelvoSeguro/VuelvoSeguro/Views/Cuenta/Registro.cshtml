@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Crear cuenta";
+}
+
+<div class="formulario">
+    <h2 class="mb-1">Crear cuenta</h2>
+    <p class="text-body-secondary">Elegí cómo vas a usar VuelvoSeguro.</p>
+    <div class="d-grid gap-3">
+        <a class="btn btn-vs btn-grande" asp-action="RegistroPasajero">Soy pasajero</a>
+        <a class="btn btn-navy btn-grande" asp-action="RegistroConductor">Soy conductor</a>
+    </div>
+    <p class="text-center mt-4">¿Ya tenés cuenta? <a asp-action="Login">Iniciá sesión</a></p>
+</div>

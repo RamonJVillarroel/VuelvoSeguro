@@ -6,20 +6,21 @@ namespace VuelvoSeguro.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
+        // RF02: cada rol entra directo a sus pantallas.
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
+            if (User.IsInRole(Rol.Administrador))
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+            if (User.IsInRole(Rol.Conductor))
+            {
+                return RedirectToAction("Index", "Conductor");
+            }
+            if (User.IsInRole(Rol.Pasajero))
+            {
+                return RedirectToAction("Index", "Pasajero");
+            }
             return View();
         }
 
