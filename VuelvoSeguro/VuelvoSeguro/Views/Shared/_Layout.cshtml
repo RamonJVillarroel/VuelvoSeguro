@@ -1,6 +1,15 @@
 @{
     var nav = ViewData["Nav"] as string;
     var etiqueta = User.IsInRole(Rol.Pasajero) ? "Pasajero" : User.IsInRole(Rol.Conductor) ? "Conductor" : null;
+    var ancho = ViewData["Ancho"] as string;
+    var conNavegacion = nav != null && User.IsInRole(Rol.Pasajero);
+    // Secciones del pasajero: se muestran abajo en el celular y en la barra superior en pantallas grandes.
+    var secciones = new[]
+    {
+        (Clave: "inicio", Accion: "Index", Texto: "Inicio", Icono: "<path d=\"M3 11l9-8 9 8\" /><path d=\"M5 10v10h14V10\" />"),
+        (Clave: "historial", Accion: "Historial", Texto: "Historial", Icono: "<path d=\"M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01\" />"),
+        (Clave: "perfil", Accion: "Perfil", Texto: "Perfil", Icono: "<circle cx=\"12\" cy=\"8\" r=\"4\" /><path d=\"M4 21c0-4 4-7 8-7s8 3 8 7\" />")
+    };
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -13,37 +22,47 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="escenario">
-        <div class="celular">
-            <div class="barra-app">
+    <div class="app">
+        <header class="barra-app">
+            <div class="barra-interior">
                 <a class="marca" asp-controller="Home" asp-action="Index">Vuelvo<span>Seguro</span></a>
+                @if (conNavegacion)
+                {
+                    <nav class="nav-superior d-none d-md-flex" aria-label="Navegación">
+                        @foreach (var s in secciones)
+                        {
+                            <a asp-controller="Pasajero" asp-action="@s.Accion" class="@(nav == s.Clave ? "activo" : "")">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">@Html.Raw(s.Icono)</svg>@s.Texto
+                            </a>
+                        }
+                    </nav>
+                }
                 @if (etiqueta != null)
                 {
                     <span class="badge rounded-pill bg-light text-dark">@etiqueta</span>
                 }
             </div>
-            <main class="contenido" role="main">
+        </header>
+        <main class="contenido" role="main">
+            <div class="contenedor @ancho">
                 @if (TempData["Mensaje"] is string mensaje)
                 {
                     <div class="alert alert-success">@mensaje</div>
                 }
                 @RenderBody()
-            </main>
-            @if (nav != null && User.IsInRole(Rol.Pasajero))
-            {
-                <nav class="nav-inferior" aria-label="Navegación">
-                    <a asp-controller="Pasajero" asp-action="Index" class="@(nav == "inicio" ? "activo" : "")">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8" /><path d="M5 10v10h14V10" /></svg>Inicio
+            </div>
+        </main>
+        @if (conNavegacion)
+        {
+            <nav class="nav-inferior d-md-none" aria-label="Navegación">
+                @foreach (var s in secciones)
+                {
+                    <a asp-controller="Pasajero" asp-action="@s.Accion" class="@(nav == s.Clave ? "activo" : "")">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">@Html.Raw(s.Icono)</svg>@s.Texto
                     </a>
-                    <a asp-controller="Pasajero" asp-action="Historial" class="@(nav == "historial" ? "activo" : "")">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>Historial
-                    </a>
-                    <a asp-controller="Pasajero" asp-action="Perfil" class="@(nav == "perfil" ? "activo" : "")">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-7 8-7s8 3 8 7" /></svg>Perfil
-                    </a>
-                </nav>
-            }
-        </div>
+                }
+            </nav>
+        }
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

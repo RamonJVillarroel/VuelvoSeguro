@@ -19,7 +19,7 @@ else
         {
             <div class="list-group-item d-flex align-items-center gap-3">
                 <div class="avatar sm">@($"{c.Nombre.FirstOrDefault()}{c.Apellido.FirstOrDefault()}".ToUpper())</div>
-                <div>
+                <div class="text-break">
                     <div class="fw-semibold">@c.NombreCompleto</div>
                     <div class="small text-body-secondary">@c.Email · DNI @c.Dni</div>
                 </div>

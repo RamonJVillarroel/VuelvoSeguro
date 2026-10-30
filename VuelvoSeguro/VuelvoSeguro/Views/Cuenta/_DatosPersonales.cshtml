@@ -24,24 +24,28 @@
         <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
     </div>
 </div>
-<div class="mb-2">
-    <label asp-for="Email" class="form-label"></label>
-    <input asp-for="Email" class="form-control" autocomplete="email" />
-    <span asp-validation-for="Email" class="text-danger small"></span>
+<div class="row g-2 mb-2">
+    <div class="col-12 col-md-6">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" autocomplete="email" />
+        <span asp-validation-for="Email" class="text-danger small"></span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="Telefono" class="form-label"></label>
+        <input asp-for="Telefono" type="tel" class="form-control" autocomplete="tel" />
+        <span asp-validation-for="Telefono" class="text-danger small"></span>
+    </div>
 </div>
-<div class="mb-2">
-    <label asp-for="Telefono" class="form-label"></label>
-    <input asp-for="Telefono" type="tel" class="form-control" autocomplete="tel" />
-    <span asp-validation-for="Telefono" class="text-danger small"></span>
-</div>
-<div class="mb-2">
-    <label asp-for="Password" class="form-label"></label>
-    <input asp-for="Password" class="form-control" autocomplete="new-password" />
-    <span asp-validation-for="Password" class="text-danger small"></span>
-    <div class="form-text">Al menos 8 caracteres, una minúscula y un número.</div>
-</div>
-<div class="mb-3">
-    <label asp-for="ConfirmarPassword" class="form-label"></label>
-    <input asp-for="ConfirmarPassword" class="form-control" autocomplete="new-password" />
-    <span asp-validation-for="ConfirmarPassword" class="text-danger small"></span>
+<div class="row g-2 mb-3">
+    <div class="col-12 col-md-6">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" autocomplete="new-password" />
+        <span asp-validation-for="Password" class="text-danger small"></span>
+        <div class="form-text">Al menos 8 caracteres, una minúscula y un número.</div>
+    </div>
+    <div class="col-12 col-md-6">
+        <label asp-for="ConfirmarPassword" class="form-label"></label>
+        <input asp-for="ConfirmarPassword" class="form-control" autocomplete="new-password" />
+        <span asp-validation-for="ConfirmarPassword" class="text-danger small"></span>
+    </div>
 </div>

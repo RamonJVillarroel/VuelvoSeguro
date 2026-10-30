@@ -17,17 +17,20 @@
     </div>
 }
 
-<div class="text-center my-5">
-    @* Publicar el viaje (RF05) se habilita en el sprint 4. *@
-    <button type="button" class="btn btn-vs boton-casa" disabled>Volver<br>a casa</button>
-</div>
-
-<div class="card mb-3">
-    <div class="card-body py-2">
-        <div class="d-flex gap-2 align-items-start py-1">
-            <span class="pin destino mt-1"></span>
-            <div><div class="dato">Destino (tu casa)</div><div>@Model.Direccion</div></div>
+<div class="row align-items-center g-4">
+    <div class="col-md-6 text-center my-4 my-md-5">
+        @* Publicar el viaje (RF05) se habilita en el sprint 4. *@
+        <button type="button" class="btn btn-vs boton-casa" disabled>Volver<br>a casa</button>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-body py-2">
+                <div class="d-flex gap-2 align-items-start py-1">
+                    <span class="pin destino mt-1"></span>
+                    <div><div class="dato">Destino (tu casa)</div><div>@Model.Direccion</div></div>
+                </div>
+            </div>
         </div>
+        <p class="small text-body-secondary text-center text-md-start">Con un clic vas a publicar el viaje. Un conductor va a buscarte y te lleva en tu auto.</p>
     </div>
 </div>
-<p class="small text-body-secondary text-center">Con un clic vas a publicar el viaje. Un conductor va a buscarte y te lleva en tu auto.</p>

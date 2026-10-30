@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="escenario p-sm-4">
+    <div class="p-md-4">
         <div class="escritorio">
             <div class="barra-app">
-                <div class="marca">Vuelvo<span>Seguro</span> <small class="fw-normal opacity-75">· Administración</small></div>
+                <div class="marca">Vuelvo<span>Seguro</span> <small class="fw-normal opacity-75 d-none d-sm-inline">· Administración</small></div>
                 <form asp-controller="Cuenta" asp-action="Logout" method="post">
                     <button type="submit" class="btn btn-sm btn-outline-light">Cerrar sesión</button>
                 </form>
@@ -32,7 +32,7 @@
                     <span class="deshabilitado">Viajes</span>
                     <span class="deshabilitado">Usuarios</span>
                 </div>
-                <main class="col-md-9 p-4" role="main">
+                <main class="col-md-9 p-3 p-md-4" role="main">
                     @RenderBody()
                 </main>
             </div>
