@@ -2,14 +2,24 @@
     var nav = ViewData["Nav"] as string;
     var etiqueta = User.IsInRole(Rol.Pasajero) ? "Pasajero" : User.IsInRole(Rol.Conductor) ? "Conductor" : null;
     var ancho = ViewData["Ancho"] as string;
-    var conNavegacion = nav != null && User.IsInRole(Rol.Pasajero);
-    // Secciones del pasajero: se muestran abajo en el celular y en la barra superior en pantallas grandes.
-    var secciones = new[]
-    {
-        (Clave: "inicio", Accion: "Index", Texto: "Inicio", Icono: "<path d=\"M3 11l9-8 9 8\" /><path d=\"M5 10v10h14V10\" />"),
-        (Clave: "historial", Accion: "Historial", Texto: "Historial", Icono: "<path d=\"M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01\" />"),
-        (Clave: "perfil", Accion: "Perfil", Texto: "Perfil", Icono: "<circle cx=\"12\" cy=\"8\" r=\"4\" /><path d=\"M4 21c0-4 4-7 8-7s8 3 8 7\" />")
-    };
+    var esConductor = User.IsInRole(Rol.Conductor);
+    var conNavegacion = nav != null && (User.IsInRole(Rol.Pasajero) || esConductor);
+    var controlador = esConductor ? "Conductor" : "Pasajero";
+    const string iconoLista = "<path d=\"M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01\" />";
+    const string iconoPerfil = "<circle cx=\"12\" cy=\"8\" r=\"4\" /><path d=\"M4 21c0-4 4-7 8-7s8 3 8 7\" />";
+    // Secciones de cada rol: se muestran abajo en el celular y en la barra superior en pantallas grandes.
+    var secciones = esConductor
+        ? new[]
+        {
+            (Clave: "viajes", Accion: "Disponibles", Texto: "Viajes", Icono: "<path d=\"M5 16l1.5-5h11L19 16\" /><rect x=\"3\" y=\"16\" width=\"18\" height=\"4\" rx=\"1\" />"),
+            (Clave: "perfil", Accion: "Perfil", Texto: "Perfil", Icono: iconoPerfil)
+        }
+        : new[]
+        {
+            (Clave: "inicio", Accion: "Index", Texto: "Inicio", Icono: "<path d=\"M3 11l9-8 9 8\" /><path d=\"M5 10v10h14V10\" />"),
+            (Clave: "historial", Accion: "Historial", Texto: "Historial", Icono: iconoLista),
+            (Clave: "perfil", Accion: "Perfil", Texto: "Perfil", Icono: iconoPerfil)
+        };
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -20,6 +30,7 @@
     <partial name="_Tema" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Head", required: false)
 </head>
 <body>
     <div class="app">
@@ -31,7 +42,7 @@
                     <nav class="nav-superior d-none d-md-flex" aria-label="Navegación">
                         @foreach (var s in secciones)
                         {
-                            <a asp-controller="Pasajero" asp-action="@s.Accion" class="@(nav == s.Clave ? "activo" : "")">
+                            <a asp-controller="@controlador" asp-action="@s.Accion" class="@(nav == s.Clave ? "activo" : "")">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">@Html.Raw(s.Icono)</svg>@s.Texto
                             </a>
                         }
@@ -57,7 +68,7 @@
             <nav class="nav-inferior d-md-none" aria-label="Navegación">
                 @foreach (var s in secciones)
                 {
-                    <a asp-controller="Pasajero" asp-action="@s.Accion" class="@(nav == s.Clave ? "activo" : "")">
+                    <a asp-controller="@controlador" asp-action="@s.Accion" class="@(nav == s.Clave ? "activo" : "")">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">@Html.Raw(s.Icono)</svg>@s.Texto
                     </a>
                 }

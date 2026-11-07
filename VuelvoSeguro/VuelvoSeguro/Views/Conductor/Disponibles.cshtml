@@ -1,0 +1,54 @@
+@model List<Viaje>
+@{
+    ViewData["Title"] = "Viajes disponibles";
+    ViewData["Ancho"] = "medio";
+    ViewData["Nav"] = "viajes";
+    var activo = ViewData["ViajeActivo"] as Viaje;
+}
+@section Head {
+    @* La lista se actualiza sola cada 20 segundos para mostrar los viajes nuevos. *@
+    <meta http-equiv="refresh" content="20" />
+}
+
+<h4 class="mb-1">Viajes disponibles</h4>
+<p class="text-body-secondary small">Personas que necesitan volver a casa.</p>
+
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-danger small py-2">@error</div>
+}
+@if (activo is not null)
+{
+    <div class="alert alert-success d-flex justify-content-between align-items-center py-2">
+        <span>Tenés un viaje en curso</span>
+        <a asp-action="Viaje" asp-route-id="@activo.Id" class="btn btn-sm btn-success">Ver</a>
+    </div>
+}
+
+@if (Model.Count == 0)
+{
+    <div class="list-group">
+        <div class="list-group-item py-3 text-body-secondary">No hay viajes esperando conductor en este momento.</div>
+    </div>
+}
+<div class="row g-3">
+    @foreach (var v in Model)
+    {
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-semibold">@v.Pasajero!.Nombre @v.Pasajero.Apellido.FirstOrDefault().</span>
+                        <span class="badge text-bg-light border">Publicado @v.FechaPublicacion.ToString("HH:mm")</span>
+                    </div>
+                    <div class="small"><span class="dato">Origen</span><br>@v.DireccionOrigen</div>
+                    <div class="small mt-1"><span class="dato">Destino</span><br>@v.DireccionDestino</div>
+                    <div class="small text-body-secondary mt-1">Auto: @v.Vehiculo!.Marca @v.Vehiculo.Modelo · caja @(v.Vehiculo.EsAutomatico ? "automática" : "manual")</div>
+                    <form asp-action="Aceptar" asp-route-id="@v.Id" method="post" class="mt-auto pt-3">
+                        <button type="submit" class="btn btn-vs w-100" disabled="@(activo is not null)">Aceptar viaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

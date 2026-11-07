@@ -1,0 +1,8 @@
+@model Vehiculo
+<div class="card mb-3">
+    <div class="card-body py-2">
+        <div class="dato">Auto en el que viajan (el del pasajero)</div>
+        <div class="fw-semibold">@Model.Marca @Model.Modelo</div>
+        <div class="small text-body-secondary">Patente @Model.Patente · Caja @(Model.EsAutomatico ? "automática" : "manual")</div>
+    </div>
+</div>
