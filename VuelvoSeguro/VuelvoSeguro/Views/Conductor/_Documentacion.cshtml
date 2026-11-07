@@ -1,0 +1,40 @@
+@model DocumentacionViewModel
+
+<form asp-action="Documentacion" method="post" enctype="multipart/form-data" class="card mb-3">
+    <div class="card-body">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+        <h6>Licencia de conducir <span class="text-danger">*</span></h6>
+        <div class="row g-2 mb-2">
+            <div class="col-7">
+                <label asp-for="NumeroLicencia" class="form-label small">Número</label>
+                <input asp-for="NumeroLicencia" class="form-control" />
+                <span asp-validation-for="NumeroLicencia" class="text-danger small"></span>
+            </div>
+            <div class="col-5">
+                <label asp-for="VencimientoLicencia" class="form-label small">Vencimiento</label>
+                <input asp-for="VencimientoLicencia" class="form-control" />
+                <span asp-validation-for="VencimientoLicencia" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <h6 class="mt-3">Documentación</h6>
+        <div class="mb-2">
+            <label asp-for="FotoLicencia" class="form-label small"></label>
+            <input asp-for="FotoLicencia" type="file" class="form-control" accept="image/*,.pdf" />
+            <span asp-validation-for="FotoLicencia" class="text-danger small"></span>
+        </div>
+        <div class="mb-2">
+            <label asp-for="FotoDni" class="form-label small"></label>
+            <input asp-for="FotoDni" type="file" class="form-control" accept="image/*,.pdf" />
+            <span asp-validation-for="FotoDni" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Antecedentes" class="form-label small"><span>Certificado de antecedentes penales</span> <span class="text-danger">*</span></label>
+            <input asp-for="Antecedentes" type="file" class="form-control" accept="image/*,.pdf" />
+            <span asp-validation-for="Antecedentes" class="text-danger small"></span>
+            <div class="form-text">Emitido por el Registro Nacional de Reincidencia, con no más de 90 días de antigüedad.</div>
+        </div>
+        <div class="form-text mb-3">Imágenes JPG o PNG, o archivos PDF de hasta 5 MB.</div>
+        <button type="submit" class="btn btn-vs btn-grande w-100">Enviar documentación</button>
+    </div>
+</form>

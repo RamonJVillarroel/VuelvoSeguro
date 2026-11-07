@@ -1,0 +1,26 @@
+@model List<UsuarioAdminViewModel>
+@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "_LayoutAdmin";
+    ViewData["Seccion"] = "usuarios";
+}
+
+<h4 class="mb-3">Usuarios</h4>
+<div class="table-responsive">
+    <table class="table table-hover align-middle small">
+        <thead><tr><th>Nombre</th><th>Correo</th><th>DNI</th><th>Rol</th><th>Estado</th></tr></thead>
+        <tbody>
+            @foreach (var fila in Model)
+            {
+                var u = fila.Usuario;
+                <tr>
+                    <td>@u.NombreCompleto</td>
+                    <td class="text-break">@u.Email</td>
+                    <td>@u.Dni</td>
+                    <td>@fila.Rol</td>
+                    <td><span class="badge text-bg-@EstadoUsuario.Color(u.EstadoUsuarioId)">@u.EstadoUsuario?.NombreEstado</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

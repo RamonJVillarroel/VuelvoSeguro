@@ -16,5 +16,15 @@ namespace VuelvoSeguro.Models
         public string NombreEstado { get; set; } = string.Empty;
 
         public ICollection<Viaje> Viajes { get; set; } = new List<Viaje>();
+
+        // Color de la insignia de cada estado, igual que en el prototipo.
+        public static string Color(int id) => id switch
+        {
+            Publicado => "warning",
+            Aceptado => "info",
+            EnCurso => "success",
+            Finalizado => "secondary",
+            _ => "danger"
+        };
     }
 }

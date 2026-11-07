@@ -16,5 +16,12 @@ namespace VuelvoSeguro.Models
         public string NombreEstado { get; set; } = string.Empty;
 
         public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+
+        public static string Color(int id) => id switch
+        {
+            Activo or Aprobado => "success",
+            Pendiente => "warning",
+            _ => "danger"
+        };
     }
 }

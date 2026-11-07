@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VuelvoSeguro.Data;
 using VuelvoSeguro.Models;
+using VuelvoSeguro.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<AlmacenDocumentos>();
 
 var app = builder.Build();
 
