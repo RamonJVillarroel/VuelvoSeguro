@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VuelvoSeguro.Data;
@@ -14,11 +15,13 @@ namespace VuelvoSeguro.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly AlmacenDocumentos _documentos;
+        private readonly UserManager<Usuario> _userManager;
 
-        public AdminController(ApplicationDbContext db, AlmacenDocumentos documentos)
+        public AdminController(ApplicationDbContext db, AlmacenDocumentos documentos, UserManager<Usuario> userManager)
         {
             _db = db;
             _documentos = documentos;
+            _userManager = userManager;
         }
 
         // Conductores pendientes: lista a la izquierda y detalle del seleccionado a la derecha.
@@ -92,6 +95,41 @@ namespace VuelvoSeguro.Controllers
                 .ToListAsync();
             await ContarPendientesAsync();
             return View(usuarios);
+        }
+
+        // RF11: un usuario suspendido no puede ingresar. Reactivarlo le devuelve su estado anterior.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Suspender(int id)
+        {
+            var usuario = await _db.Users.FindAsync(id);
+            if (usuario is null || await _userManager.IsInRoleAsync(usuario, Rol.Administrador))
+            {
+                return NotFound();
+            }
+            usuario.EstadoUsuarioId = EstadoUsuario.Suspendido;
+            await _db.SaveChangesAsync();
+            // Cambiar el sello de seguridad cierra las sesiones abiertas del usuario.
+            await _userManager.UpdateSecurityStampAsync(usuario);
+            TempData["Mensaje"] = $"{usuario.NombreCompleto} quedó suspendido.";
+            return RedirectToAction(nameof(Usuarios));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reactivar(int id)
+        {
+            var usuario = await _db.Users.FirstOrDefaultAsync(u => u.Id == id && u.EstadoUsuarioId == EstadoUsuario.Suspendido);
+            if (usuario is null)
+            {
+                return NotFound();
+            }
+            usuario.EstadoUsuarioId = await _userManager.IsInRoleAsync(usuario, Rol.Conductor)
+                ? (usuario.FechaAprobacion.HasValue ? EstadoUsuario.Aprobado : EstadoUsuario.Pendiente)
+                : EstadoUsuario.Activo;
+            await _db.SaveChangesAsync();
+            TempData["Mensaje"] = $"{usuario.NombreCompleto} volvió a estar habilitado.";
+            return RedirectToAction(nameof(Usuarios));
         }
 
         private async Task<IActionResult> ResolverAsync(int id, bool aprobar)
