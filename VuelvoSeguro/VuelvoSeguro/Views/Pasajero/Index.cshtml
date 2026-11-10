@@ -9,6 +9,10 @@
 <h4 class="mb-0">Hola, @Model.Nombre</h4>
 <p class="text-body-secondary">¿Querés volver a casa?</p>
 
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-danger small py-2">@error</div>
+}
 @if (!seguroVigente)
 {
     <div class="alert alert-warning small py-2">
@@ -17,20 +21,39 @@
     </div>
 }
 
-<div class="row align-items-center g-4">
-    <div class="col-md-6 text-center my-4 my-md-5">
-        @* Publicar el viaje (RF05) se habilita en el sprint 4. *@
-        <button type="button" class="btn btn-vs boton-casa" disabled>Volver<br>a casa</button>
-    </div>
-    <div class="col-md-6">
-        <div class="card mb-3">
-            <div class="card-body py-2">
-                <div class="d-flex gap-2 align-items-start py-1">
-                    <span class="pin destino mt-1"></span>
-                    <div><div class="dato">Destino (tu casa)</div><div>@Model.Direccion</div></div>
+<form asp-action="Publicar" method="post">
+    <div class="row align-items-center g-4">
+        <div class="col-md-6 text-center my-4 my-md-5">
+            <button type="submit" class="btn btn-vs boton-casa" disabled="@(!seguroVigente)">Volver<br>a casa</button>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body py-2">
+                    <div class="d-flex gap-2 align-items-start py-1">
+                        <span class="pin origen mt-1"></span>
+                        <div class="flex-grow-1">
+                            <label for="origen" class="dato">Origen (dónde estás)</label>
+                            <input id="origen" name="origen" class="form-control form-control-sm mt-1" maxlength="150" required
+                                   placeholder="Ej.: Bar La Esquina, Av. Corrientes 1800" value="@(TempData["Origen"] as string)" />
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 align-items-start py-1">
+                        <span class="pin destino mt-1"></span>
+                        <div><div class="dato">Destino (tu casa)</div><div>@Model.Direccion</div></div>
+                    </div>
                 </div>
             </div>
+            @if (vehiculo is not null)
+            {
+                <div class="card mb-3">
+                    <div class="card-body py-2">
+                        <div class="dato">Auto en el que viajan (el tuyo)</div>
+                        <div class="fw-semibold">@vehiculo.Marca @vehiculo.Modelo</div>
+                        <div class="small text-body-secondary">Patente @vehiculo.Patente · Caja @(vehiculo.EsAutomatico ? "automática" : "manual")</div>
+                    </div>
+                </div>
+            }
+            <p class="small text-body-secondary text-center text-md-start">Con un clic publicás el viaje. Un conductor va a buscarte y te lleva en tu auto.</p>
         </div>
-        <p class="small text-body-secondary text-center text-md-start">Con un clic vas a publicar el viaje. Un conductor va a buscarte y te lleva en tu auto.</p>
     </div>
-</div>
+</form>

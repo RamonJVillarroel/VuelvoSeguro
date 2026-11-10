@@ -38,6 +38,7 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options => options.Val
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<AlmacenDocumentos>();
+builder.Services.AddScoped<ViajeService>();
 
 var app = builder.Build();
 

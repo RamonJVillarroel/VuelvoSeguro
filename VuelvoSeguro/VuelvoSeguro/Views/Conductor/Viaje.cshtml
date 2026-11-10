@@ -1,0 +1,59 @@
+@model Viaje
+@{
+    ViewData["Title"] = "Viaje aceptado";
+    ViewData["Ancho"] = "medio";
+    ViewData["Nav"] = "viajes";
+    var estado = Model.EstadoViajeId;
+    // Paso actual: 0 = ir a buscar al pasajero, 1 = llevarlo a su casa, 2 = terminado.
+    var paso = estado == EstadoViaje.Aceptado ? 0 : estado == EstadoViaje.EnCurso ? 1 : 2;
+    string Clase(int n) => paso > n ? "hecho" : paso == n ? "actual" : "";
+    string Punto(int n) => paso > n ? "✓" : (n + 1).ToString();
+}
+
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-danger small py-2">@error</div>
+}
+<div class="mb-2"><span class="badge text-bg-@EstadoViaje.Color(estado)">@Model.EstadoViaje?.NombreEstado</span></div>
+<div class="card mb-3">
+    <div class="card-body d-flex align-items-center gap-3">
+        <div class="avatar sm">@($"{Model.Pasajero!.Nombre.FirstOrDefault()}{Model.Pasajero.Apellido.FirstOrDefault()}".ToUpper())</div>
+        <div>
+            <div class="dato">Pasajero</div>
+            <div class="fw-bold">@Model.Pasajero.NombreCompleto</div>
+            <div class="small text-body-secondary">Tel. @Model.Pasajero.PhoneNumber</div>
+        </div>
+    </div>
+</div>
+@if (paso < 2)
+{
+    <div class="card mb-3">
+        <div class="card-body py-2">
+            <div class="dato">@(paso == 0 ? "Buscalo en" : "Llevalo a")</div>
+            <div class="fw-semibold">@(paso == 0 ? Model.DireccionOrigen : Model.DireccionDestino)</div>
+        </div>
+    </div>
+}
+<partial name="_AutoDelViaje" model="Model.Vehiculo" />
+<ul class="pasos mb-3">
+    <li class="@Clase(0)"><span class="punto">@Punto(0)</span>Ir a buscar al pasajero</li>
+    <li class="@Clase(1)"><span class="punto">@Punto(1)</span>Llevarlo a su casa</li>
+    <li class="@Clase(2)"><span class="punto">@Punto(2)</span>Finalizar el viaje</li>
+</ul>
+
+@if (estado == EstadoViaje.Aceptado)
+{
+    <form asp-action="Iniciar" asp-route-id="@Model.Id" method="post">
+        <button type="submit" class="btn btn-vs btn-grande w-100">Confirmar que recogí al pasajero</button>
+    </form>
+}
+else if (estado == EstadoViaje.EnCurso)
+{
+    <form asp-action="Finalizar" asp-route-id="@Model.Id" method="post">
+        <button type="submit" class="btn btn-vs btn-grande w-100">Finalizar viaje</button>
+    </form>
+}
+else
+{
+    <a asp-action="Disponibles" class="btn btn-vs btn-grande w-100">Volver a los viajes</a>
+}
