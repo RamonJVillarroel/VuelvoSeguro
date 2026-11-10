@@ -21,7 +21,7 @@ Plataforma web de conductores designados: la persona que bebió publica su viaje
 
 ## Estado de avance: 67 %
 
-El proyecto sigue un ciclo de vida incremental gestionado con Scrum (Avance 1, Tabla 3). De los 6 sprints de desarrollo planificados hay **4 terminados**, que cubren 8 de los 10 requerimientos funcionales del alcance.
+El proyecto sigue un ciclo de vida incremental gestionado con Scrum (Avance 1, Tabla 3). De los 6 sprints de desarrollo planificados hay **4 terminados**.
 
 | Sprint | Incremento | Requerimientos | Entrega | Estado |
 |---|---|---|---|---|
