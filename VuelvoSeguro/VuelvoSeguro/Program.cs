@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VuelvoSeguro.Data;
 using VuelvoSeguro.Models;
+using VuelvoSeguro.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromHours(24);
 });
 
+// Revisa cada minuto si la sesión sigue siendo válida (por ejemplo, si el usuario fue suspendido).
+builder.Services.Configure<SecurityStampValidatorOptions>(options => options.ValidationInterval = TimeSpan.FromMinutes(1));
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<AlmacenDocumentos>();
 
 var app = builder.Build();
 

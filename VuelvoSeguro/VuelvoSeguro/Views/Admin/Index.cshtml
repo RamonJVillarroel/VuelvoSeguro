@@ -1,12 +1,13 @@
-@model List<Usuario>
+@model ConductoresPendientesViewModel
 @{
     ViewData["Title"] = "Conductores pendientes";
     Layout = "_LayoutAdmin";
     ViewData["Seccion"] = "conductores";
-    ViewData["Pendientes"] = Model.Count;
+    var sel = Model.Seleccionado;
+    string Iniciales(Usuario u) => $"{u.Nombre.FirstOrDefault()}{u.Apellido.FirstOrDefault()}".ToUpper();
 }
 
-@if (Model.Count == 0)
+@if (sel is null)
 {
     <h4>Conductores pendientes</h4>
     <div class="alert alert-success">No hay conductores esperando aprobación.</div>
@@ -14,16 +15,72 @@
 else
 {
     <h4 class="mb-3">Conductores pendientes de aprobación</h4>
-    <div class="list-group">
-        @foreach (var c in Model)
-        {
-            <div class="list-group-item d-flex align-items-center gap-3">
-                <div class="avatar sm">@($"{c.Nombre.FirstOrDefault()}{c.Apellido.FirstOrDefault()}".ToUpper())</div>
-                <div class="text-break">
-                    <div class="fw-semibold">@c.NombreCompleto</div>
-                    <div class="small text-body-secondary">@c.Email · DNI @c.Dni</div>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="list-group">
+                @foreach (var c in Model.Pendientes)
+                {
+                    var activo = c.Id == sel.Id;
+                    <a asp-action="Index" asp-route-id="@c.Id" class="list-group-item list-group-item-action d-flex align-items-center gap-3 @(activo ? "active" : "")">
+                        <div class="avatar sm">@Iniciales(c)</div>
+                        <div class="text-break">
+                            <div class="fw-semibold">@c.NombreCompleto</div>
+                            <div class="small @(activo ? "" : "text-body-secondary")">
+                                @(c.RutaAntecedentes is null ? "Sin documentación todavía" : "Documentación enviada")
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">@sel.NombreCompleto</h5>
+                    <dl class="row small mb-3">
+                        <dt class="col-5">Correo</dt><dd class="col-7 text-break">@sel.Email</dd>
+                        <dt class="col-5">Teléfono</dt><dd class="col-7">@sel.PhoneNumber</dd>
+                        <dt class="col-5">DNI</dt><dd class="col-7">@sel.Dni</dd>
+                        <dt class="col-5">Nacimiento</dt><dd class="col-7">@sel.FechaNacimiento.ToString("dd/MM/yyyy")</dd>
+                        <dt class="col-5">Licencia</dt><dd class="col-7">@(sel.NumeroLicencia ?? "-")</dd>
+                        <dt class="col-5">Vencimiento</dt><dd class="col-7">@(sel.VencimientoLicencia?.ToString("dd/MM/yyyy") ?? "-")</dd>
+                    </dl>
+                    <div class="dato mb-2">Documentación</div>
+                    @if (sel.RutaAntecedentes is null)
+                    {
+                        <div class="alert alert-warning small py-2">El conductor todavía no envió su licencia, su DNI ni el certificado de antecedentes penales.</div>
+                    }
+                    else
+                    {
+                        <div class="row g-2 mb-4">
+                            @foreach (var (tipo, texto, ruta) in new[] { ("licencia", "Licencia", sel.RutaLicencia), ("dni", "DNI", sel.RutaDni), ("antecedentes", "Antecedentes penales", sel.RutaAntecedentes) })
+                            {
+                                <div class="col-6 col-xl-4">
+                                    <a class="doc-miniatura" asp-action="Documento" asp-route-id="@sel.Id" asp-route-tipo="@tipo" target="_blank" rel="noopener">
+                                        @if (VuelvoSeguro.Servicios.AlmacenDocumentos.EsImagen(ruta))
+                                        {
+                                            <img src="@Url.Action("Documento", new { id = sel.Id, tipo })" alt="@texto" />
+                                        }
+                                        else
+                                        {
+                                            <span>PDF</span>
+                                        }
+                                        <small>@texto</small>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    }
+                    <div class="d-flex gap-2">
+                        <form asp-action="Aprobar" asp-route-id="@sel.Id" method="post" class="flex-fill">
+                            <button type="submit" class="btn btn-vs w-100" disabled="@(sel.RutaAntecedentes is null)">Aprobar</button>
+                        </form>
+                        <form asp-action="Rechazar" asp-route-id="@sel.Id" method="post" class="flex-fill">
+                            <button type="submit" class="btn btn-outline-danger w-100">Rechazar</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        }
+        </div>
     </div>
 }

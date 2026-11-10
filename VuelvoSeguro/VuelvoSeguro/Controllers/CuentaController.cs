@@ -37,6 +37,14 @@ namespace VuelvoSeguro.Controllers
                 return View(modelo);
             }
 
+            // RF11: un usuario suspendido no puede ingresar.
+            var usuario = await _userManager.FindByEmailAsync(modelo.Email);
+            if (usuario?.EstadoUsuarioId == EstadoUsuario.Suspendido && await _userManager.CheckPasswordAsync(usuario, modelo.Password))
+            {
+                ModelState.AddModelError(string.Empty, "Tu cuenta está suspendida. Comunicate con el administrador.");
+                return View(modelo);
+            }
+
             var resultado = await _signInManager.PasswordSignInAsync(modelo.Email, modelo.Password, modelo.Recordarme, lockoutOnFailure: true);
             if (resultado.IsLockedOut)
             {
