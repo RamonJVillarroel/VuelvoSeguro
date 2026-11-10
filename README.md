@@ -34,7 +34,7 @@ El proyecto sigue un ciclo de vida incremental gestionado con Scrum (Avance 1, T
 
 **Alcance acotado:** el proyecto no maneja dinero. Por eso queda fuera RF06 (tarifa estimada) y el importe del historial (RF10). Tampoco hay calificaciones ni pagos.
 
-### Qué funciona hoy
+### Funcionalidades hasta ahora
 
 - **Usuario:** registro como pasajero o conductor (rechaza menores de 18 años, DNI y correo únicos) e inicio de sesión que lleva a cada rol a sus pantallas.
 - **Pasajero:** carga y edición de su auto (patente, caja, vencimiento del seguro); publica el viaje a su casa con un clic indicando dónde está; sigue el estado del viaje (buscando conductor, conductor en camino, en curso, llegada).
