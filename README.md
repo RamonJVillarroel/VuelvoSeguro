@@ -16,10 +16,8 @@ Plataforma web de conductores designados: la persona que bebió publica su viaje
 ### Integrantes
 
 | Nombre y apellido | Correo |
-|---|---|---|---|
+|---|---|
 | Ramón Villarroel | rvillarroel4@alumnos.kennedy.edu.ar |
-
-El proyecto lo desarrolla un único integrante, que realizó todas las tareas de análisis, diseño, desarrollo y pruebas.
 
 ## Estado de avance: 67 %
 
