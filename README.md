@@ -10,14 +10,14 @@ Plataforma web de conductores designados: la persona que bebió publica su viaje
 | **Materia** | Taller de Proyectos II |
 | **Carrera** | Tecnicatura Universitaria en Tecnologías de la Información |
 | **Profesor** | Christian Pardavila |
-| **Fecha de entrega** | 07/11/2026 |
+| **Fecha de entrega** | 17/11/2026 |
 | **Repositorio** | https://github.com/RamonJVillarroel/VuelvoSeguro |
 
 ### Integrantes
 
-| Nombre y apellido | DNI | Legajo | Correo |
+| Nombre y apellido | Correo |
 |---|---|---|---|
-| Ramón Villarroel | 96107926 | 227807 | rvillarroel4@alumnos.kennedy.edu.ar |
+| Ramón Villarroel | rvillarroel4@alumnos.kennedy.edu.ar |
 
 El proyecto lo desarrolla un único integrante, que realizó todas las tareas de análisis, diseño, desarrollo y pruebas.
 
