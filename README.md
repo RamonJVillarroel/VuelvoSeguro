@@ -10,7 +10,7 @@ Plataforma web de conductores designados: la persona que bebió publica su viaje
 | **Materia** | Taller de Proyectos II |
 | **Carrera** | Tecnicatura Universitaria en Tecnologías de la Información |
 | **Profesor** | Christian Pardavila |
-| **Fecha de entrega** | 17/11/2026 |
+| **Fecha de entrega** | 12/11/2026 |
 | **Repositorio** | https://github.com/RamonJVillarroel/VuelvoSeguro |
 
 ### Integrantes
