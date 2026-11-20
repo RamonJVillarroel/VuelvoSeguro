@@ -55,6 +55,43 @@ namespace VuelvoSeguro.Tests
         }
 
         [Fact]
+        public async Task Publicar_conUbicacionDelCelular_guardaCoordenadasYNoExigeTexto()
+        {
+            var pasajero = _base.CrearPasajero();
+
+            var resultado = await Servicio().PublicarAsync(pasajero, "", _ahora, -34.603722, -58.381592);
+
+            Assert.True(resultado.Ok, resultado.Error);
+            var viaje = await Servicio().BuscarAsync(resultado.ViajeId!.Value);
+            Assert.Equal(-34.603722, viaje!.OrigenLatitud);
+            Assert.Equal(-58.381592, viaje.OrigenLongitud);
+            Assert.Equal(ViajeService.UbicacionSinDireccion, viaje.DireccionOrigen);
+            Assert.Equal("https://www.google.com/maps/search/?api=1&query=-34.603722,-58.381592", viaje.LinkMapaOrigen);
+        }
+
+        [Fact]
+        public async Task Publicar_conCoordenadasFueraDeRango_seRechaza()
+        {
+            var pasajero = _base.CrearPasajero();
+
+            var resultado = await Servicio().PublicarAsync(pasajero, "Av. Corrientes 1800", _ahora, 120, -58.38);
+
+            Assert.False(resultado.Ok);
+        }
+
+        [Fact]
+        public async Task Publicar_sinPermisoDeUbicacion_usaElTextoYNoGuardaCoordenadas()
+        {
+            var pasajero = _base.CrearPasajero();
+
+            var id = await PublicarViajeAsync(pasajero);
+
+            var viaje = await Servicio().BuscarAsync(id);
+            Assert.False(viaje!.TieneUbicacion);
+            Assert.Null(viaje.LinkMapaOrigen);
+        }
+
+        [Fact]
         public async Task Publicar_conUnViajeActivo_seRechaza()
         {
             var pasajero = _base.CrearPasajero();

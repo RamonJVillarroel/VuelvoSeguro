@@ -1,0 +1,9 @@
+@model List<Viaje>
+@{
+    ViewData["Title"] = "Mis viajes";
+    ViewData["Ancho"] = "medio";
+    ViewData["Nav"] = "historial";
+}
+
+<h4 class="mb-3">Mis viajes</h4>
+<partial name="_HistorialViajes" model="Model" />

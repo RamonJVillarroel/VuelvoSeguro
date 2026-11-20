@@ -59,6 +59,10 @@ namespace VuelvoSeguro.Data
                     .WithMany(u => u.ViajesComoConductor)
                     .HasForeignKey(x => x.ConductorId)
                     .OnDelete(DeleteBehavior.Restrict);
+                v.HasOne(x => x.CanceladoPor)
+                    .WithMany()
+                    .HasForeignKey(x => x.CanceladoPorId)
+                    .OnDelete(DeleteBehavior.Restrict);
                 v.HasOne(x => x.Vehiculo)
                     .WithMany()
                     .HasForeignKey(x => x.VehiculoId)

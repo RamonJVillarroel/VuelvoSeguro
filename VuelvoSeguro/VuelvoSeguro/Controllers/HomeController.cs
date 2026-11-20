@@ -24,6 +24,12 @@ namespace VuelvoSeguro.Controllers
             return RedirectToAction("Login", "Cuenta");
         }
 
+        // RNF08: términos y condiciones, visibles sin iniciar sesión.
+        public IActionResult Terminos()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

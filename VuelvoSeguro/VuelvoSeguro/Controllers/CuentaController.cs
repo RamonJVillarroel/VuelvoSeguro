@@ -158,7 +158,8 @@ namespace VuelvoSeguro.Controllers
                 Apellido = modelo.Apellido,
                 Dni = modelo.Dni,
                 FechaNacimiento = modelo.FechaNacimiento!.Value,
-                EstadoUsuarioId = estadoUsuarioId
+                EstadoUsuarioId = estadoUsuarioId,
+                FechaAceptacionTerminos = DateTime.Now
             };
         }
 

@@ -130,6 +130,51 @@ namespace VuelvoSeguro.Controllers
             return RedirectToAction(nameof(Disponibles));
         }
 
+        // RF09: el conductor cancela un viaje aceptado (antes de recoger al pasajero) indicando el motivo.
+        [HttpGet]
+        public async Task<IActionResult> Cancelar(int id)
+        {
+            var viaje = await _viajes.BuscarAsync(id);
+            if (viaje is null || viaje.ConductorId != UsuarioId())
+            {
+                return NotFound();
+            }
+            if (!ViajeService.EstadosCancelables.Contains(viaje.EstadoViajeId))
+            {
+                TempData["Error"] = viaje.EstadoViajeId == EstadoViaje.EnCurso
+                    ? "Un viaje en curso no se puede cancelar."
+                    : "Este viaje ya terminó.";
+                return RedirectToAction(nameof(Viaje), new { id });
+            }
+            ViewData["Motivos"] = ViajeService.MotivosConductor;
+            return View("CancelarViaje", viaje);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancelar(int id, string? motivo, string? otroMotivo)
+        {
+            var resultado = await _viajes.CancelarAsync(id, UsuarioId(), CancelacionHelper.Motivo(motivo, otroMotivo), DateTime.Now);
+            if (!resultado.Ok)
+            {
+                TempData["Error"] = resultado.Error;
+                // Si el viaje ya no se puede cancelar, la pantalla de cancelación lleva de vuelta al viaje.
+                return RedirectToAction(nameof(Cancelar), new { id });
+            }
+            TempData["Mensaje"] = "Cancelaste el viaje. Le avisamos al pasajero.";
+            return RedirectToAction(nameof(Disponibles));
+        }
+
+        // RF10: historial de viajes del conductor.
+        public async Task<IActionResult> Historial()
+        {
+            if (!await EstaAprobadoAsync())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(await _viajes.HistorialAsync(UsuarioId()));
+        }
+
         public async Task<IActionResult> Perfil()
         {
             return View(await BuscarConductorAsync());

@@ -23,9 +23,21 @@ else
                         <td class="text-nowrap">@v.FechaPublicacion.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@v.Pasajero?.NombreCompleto</td>
                         <td>@(v.Conductor?.NombreCompleto ?? "-")</td>
-                        <td>@v.DireccionOrigen</td>
+                        <td>
+                            @v.DireccionOrigen
+                            @if (v.TieneUbicacion)
+                            {
+                                <a href="@v.LinkMapaOrigen" target="_blank" rel="noopener" class="small d-block">Ver mapa</a>
+                            }
+                        </td>
                         <td>@v.DireccionDestino</td>
-                        <td><span class="badge text-bg-@EstadoViaje.Color(v.EstadoViajeId)">@v.EstadoViaje?.NombreEstado</span></td>
+                        <td>
+                            <span class="badge text-bg-@EstadoViaje.Color(v.EstadoViajeId)">@v.EstadoViaje?.NombreEstado</span>
+                            @if (v.EstadoViajeId == EstadoViaje.Cancelado)
+                            {
+                                <div class="text-body-secondary mt-1" style="min-width:12rem">@v.CanceladoPor?.NombreCompleto: @v.MotivoCancelacion</div>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

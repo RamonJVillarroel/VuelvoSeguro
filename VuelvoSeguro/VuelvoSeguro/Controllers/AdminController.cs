@@ -74,6 +74,7 @@ namespace VuelvoSeguro.Controllers
                 .Include(v => v.Pasajero)
                 .Include(v => v.Conductor)
                 .Include(v => v.EstadoViaje)
+                .Include(v => v.CanceladoPor)
                 .OrderByDescending(v => v.FechaPublicacion)
                 .ToListAsync();
             await ContarPendientesAsync();

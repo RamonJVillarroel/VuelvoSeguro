@@ -1,0 +1,9 @@
+@model RegistroViewModel
+@* RNF08: casilla obligatoria para aceptar los términos y condiciones. *@
+<div class="form-check mb-3">
+    <input asp-for="AceptaTerminos" class="form-check-input" required />
+    <label asp-for="AceptaTerminos" class="form-check-label small">
+        Leí y acepto los <a asp-controller="Home" asp-action="Terminos" target="_blank" rel="noopener">términos y condiciones</a> y la política de privacidad
+    </label>
+    <div><span asp-validation-for="AceptaTerminos" class="text-danger small"></span></div>
+</div>

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,9 +38,11 @@ namespace VuelvoSeguro.Controllers
         // RF05: publicar el viaje con un clic (el destino es siempre la casa del pasajero).
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Publicar(string? origen)
+        // El origen llega como la ubicación del celular (latitud/longitud, con punto decimal) y,
+        // si el pasajero no dio permiso de ubicación, como el texto que escribió.
+        public async Task<IActionResult> Publicar(string? origen, string? latitud, string? longitud)
         {
-            var resultado = await _viajes.PublicarAsync(UsuarioId(), origen, DateTime.Now);
+            var resultado = await _viajes.PublicarAsync(UsuarioId(), origen, DateTime.Now, Coordenada(latitud), Coordenada(longitud));
             if (!resultado.Ok)
             {
                 TempData["Error"] = resultado.Error;
@@ -60,10 +63,45 @@ namespace VuelvoSeguro.Controllers
             return View(viaje);
         }
 
-        // Mis viajes (se completa con RF10 en el sprint 5).
-        public IActionResult Historial()
+        // RF09: pantalla para cancelar el viaje eligiendo el motivo.
+        [HttpGet]
+        public async Task<IActionResult> Cancelar(int id)
         {
-            return View();
+            var viaje = await _viajes.BuscarAsync(id);
+            if (viaje is null || viaje.PasajeroId != UsuarioId())
+            {
+                return NotFound();
+            }
+            if (!ViajeService.EstadosCancelables.Contains(viaje.EstadoViajeId))
+            {
+                TempData["Error"] = viaje.EstadoViajeId == EstadoViaje.EnCurso
+                    ? "Un viaje en curso no se puede cancelar."
+                    : "Este viaje ya terminó.";
+                return RedirectToAction(nameof(Viaje), new { id });
+            }
+            ViewData["Motivos"] = ViajeService.MotivosPasajero;
+            return View("CancelarViaje", viaje);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancelar(int id, string? motivo, string? otroMotivo)
+        {
+            var resultado = await _viajes.CancelarAsync(id, UsuarioId(), CancelacionHelper.Motivo(motivo, otroMotivo), DateTime.Now);
+            if (!resultado.Ok)
+            {
+                TempData["Error"] = resultado.Error;
+                // Si el viaje ya no se puede cancelar, la pantalla de cancelación lleva de vuelta al viaje.
+                return RedirectToAction(nameof(Cancelar), new { id });
+            }
+            TempData["Mensaje"] = "Cancelaste el viaje.";
+            return RedirectToAction(nameof(Viaje), new { id });
+        }
+
+        // RF10: historial de viajes del pasajero.
+        public async Task<IActionResult> Historial()
+        {
+            return View(await _viajes.HistorialAsync(UsuarioId()));
         }
 
         public async Task<IActionResult> Perfil()
@@ -120,6 +158,10 @@ namespace VuelvoSeguro.Controllers
             TempData["Mensaje"] = "Guardamos los datos de tu auto.";
             return RedirectToAction(nameof(Perfil));
         }
+
+        // Se parsea con cultura invariante: el navegador manda "-34.6037" y en es-AR el punto no es decimal.
+        private static double? Coordenada(string? valor) =>
+            double.TryParse(valor, NumberStyles.Float, CultureInfo.InvariantCulture, out var numero) ? numero : null;
 
         private int UsuarioId() => int.Parse(_userManager.GetUserId(User)!);
 

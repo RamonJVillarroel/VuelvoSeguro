@@ -429,3 +429,8 @@ FodyWeavers.xsd
 
 # Documentos subidos por los conductores (no se versionan)
 App_Data/
+
+# Pruebas de punta a punta (Playwright)
+pruebas-e2e/node_modules/
+pruebas-e2e/shots/
+pruebas-e2e/resultado.json
