@@ -1,12 +1,12 @@
 # Registro de pruebas y mantenimiento
 
-Notas de las pruebas realizadas y de los cambios de mantenimiento durante el desarrollo. Sirven de base para el informe de pruebas y mantenimiento de la entrega final (sprint 6).
+Notas de las pruebas realizadas y de los cambios de mantenimiento durante el desarrollo. Sirven de base para el [informe de pruebas y mantenimiento](informe-pruebas-y-mantenimiento.md) de la entrega final (sprint 6), que tiene el detalle completo de los sprints 5 y 6.
 
 ## 1. Pruebas unitarias (xUnit)
 
 Proyecto `VuelvoSeguro.Tests`. Prueban `ViajeService` contra una base SQLite en memoria que se crea limpia en cada prueba.
 
-**Última ejecución:** 07/11/2026 · 13 pruebas · 13 correctas · 0 fallidas.
+**Última ejecución:** 19/11/2026 · 43 pruebas · 43 correctas · 0 fallidas (U14 a U43 se agregaron en los sprints 5 y 6, ver el informe).
 
 | N.º | Prueba | Requerimiento | Resultado esperado | Resultado |
 |---|---|---|---|---|
@@ -42,6 +42,11 @@ Se ejecutó la aplicación y se recorrió cada flujo en un navegador automatizad
 | 07/11/2026 | 4 | El pasajero ve cada cambio: conductor asignado, viaje en curso, "¡Llegaste a casa!" | ✅ |
 | 07/11/2026 | 4 | El administrador ve el viaje Finalizado en el listado de Viajes | ✅ |
 | 07/11/2026 | 4 | Un conductor intenta ver la pantalla de viaje de un pasajero | ✅ Acceso denegado |
+| 19/11/2026 | 5 | Pasajero cancela un viaje publicado con "Otro motivo"; conductor cancela un viaje aceptado y el pasajero ve el motivo | ✅ Chrome y WebKit |
+| 19/11/2026 | 5 | Viaje En curso: sin botón de cancelar y la URL directa lo rechaza | ✅ Chrome y WebKit |
+| 19/11/2026 | 5 | Historial del pasajero (3 viajes) y del conductor (2 viajes) | ✅ Chrome y WebKit |
+| 19/11/2026 | 6 | Registro sin aceptar los términos no avanza; aceptándolos sí | ✅ Chrome y WebKit |
+| 19/11/2026 | 6 | HTTP redirige a HTTPS, encabezados de seguridad, POST sin token antiforgery | ✅ 307, encabezados presentes, 400 |
 
 ## 3. Mantenimiento
 
@@ -55,8 +60,10 @@ Se ejecutó la aplicación y se recorrió cada flujo en un navegador automatizad
 | 07/11/2026 | Perfectivo | Suspensión de cuentas y cierre de las sesiones abiertas del usuario suspendido | Completar RF11 |
 | 07/11/2026 | Perfectivo | Las pantallas del viaje se actualizan solas cada 15 a 20 segundos | No hay notificaciones en tiempo real en el alcance actual |
 | 07/11/2026 | Adaptativo | Se quita la tarifa (RF06) y el importe del historial (RF10) | El alcance del proyecto no maneja dinero |
+| 19/11/2026 | Perfectivo | Cancelación con motivo, historial de viajes y términos y condiciones | RF09, RF10, RNF08 |
+| 19/11/2026 | Preventivo | Encabezados de seguridad, HSTS de un año y cookies HttpOnly/SameSite | RNF03 |
+| 19/11/2026 | Correctivo | Recarga automática con JavaScript en lugar de `meta refresh` | En WebKit (Safari) la recarga interrumpía el botón "Aceptar viaje" |
 
-## 4. Pendiente para la entrega final
+## 4. Estado
 
-- Sprint 5: cancelación con motivo (un viaje En curso no se puede cancelar) e historial de viajes de pasajero y conductor.
-- Sprint 6: pruebas de rendimiento (RNF01), usabilidad (RNF02), HTTPS y seguridad (RNF03), compatibilidad de navegadores (RNF06) y términos y condiciones (RNF08).
+Sprints 5 y 6 terminados. Queda pendiente probar a mano en Firefox (no se pudo automatizar en esta computadora) y una prueba de usabilidad con usuarios reales.

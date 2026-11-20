@@ -8,6 +8,14 @@
     var paso = estado == EstadoViaje.Aceptado ? 0 : estado == EstadoViaje.EnCurso ? 1 : 2;
     string Clase(int n) => paso > n ? "hecho" : paso == n ? "actual" : "";
     string Punto(int n) => paso > n ? "✓" : (n + 1).ToString();
+    var cancelado = estado == EstadoViaje.Cancelado;
+}
+@section Head {
+    @if (estado == EstadoViaje.Aceptado)
+    {
+        @* Se actualiza sola para que el conductor vea si el pasajero canceló. *@
+        <meta name="vs-actualizar" content="20" />
+    }
 }
 
 @if (TempData["Error"] is string error)
@@ -31,29 +39,47 @@
         <div class="card-body py-2">
             <div class="dato">@(paso == 0 ? "Buscalo en" : "Llevalo a")</div>
             <div class="fw-semibold">@(paso == 0 ? Model.DireccionOrigen : Model.DireccionDestino)</div>
+            @if (paso == 0 && Model.TieneUbicacion)
+            {
+                @* Ubicación que tomó el celular del pasajero al publicar el viaje. *@
+                <a href="@Model.LinkComoLlegarOrigen" target="_blank" rel="noopener" class="btn btn-outline-secondary btn-sm mt-2">Cómo llegar (Google Maps)</a>
+            }
         </div>
     </div>
 }
-<partial name="_AutoDelViaje" model="Model.Vehiculo" />
-<ul class="pasos mb-3">
-    <li class="@Clase(0)"><span class="punto">@Punto(0)</span>Ir a buscar al pasajero</li>
-    <li class="@Clase(1)"><span class="punto">@Punto(1)</span>Llevarlo a su casa</li>
-    <li class="@Clase(2)"><span class="punto">@Punto(2)</span>Finalizar el viaje</li>
-</ul>
-
-@if (estado == EstadoViaje.Aceptado)
+@if (cancelado)
 {
-    <form asp-action="Iniciar" asp-route-id="@Model.Id" method="post">
-        <button type="submit" class="btn btn-vs btn-grande w-100">Confirmar que recogí al pasajero</button>
-    </form>
-}
-else if (estado == EstadoViaje.EnCurso)
-{
-    <form asp-action="Finalizar" asp-route-id="@Model.Id" method="post">
-        <button type="submit" class="btn btn-vs btn-grande w-100">Finalizar viaje</button>
-    </form>
+    <div class="alert alert-danger">
+        <div class="fw-semibold">@(Model.CanceladoPorId == Model.PasajeroId ? "El pasajero canceló el viaje." : "Cancelaste este viaje.")</div>
+        <div class="small">Motivo: @Model.MotivoCancelacion</div>
+    </div>
+    <a asp-action="Disponibles" class="btn btn-vs btn-grande w-100">Volver a los viajes</a>
 }
 else
 {
-    <a asp-action="Disponibles" class="btn btn-vs btn-grande w-100">Volver a los viajes</a>
+    <partial name="_AutoDelViaje" model="Model.Vehiculo" />
+    <ul class="pasos mb-3">
+        <li class="@Clase(0)"><span class="punto">@Punto(0)</span>Ir a buscar al pasajero</li>
+        <li class="@Clase(1)"><span class="punto">@Punto(1)</span>Llevarlo a su casa</li>
+        <li class="@Clase(2)"><span class="punto">@Punto(2)</span>Finalizar el viaje</li>
+    </ul>
+
+    if (estado == EstadoViaje.Aceptado)
+    {
+        <form asp-action="Iniciar" asp-route-id="@Model.Id" method="post">
+            <button type="submit" class="btn btn-vs btn-grande w-100 mb-2">Confirmar que recogí al pasajero</button>
+        </form>
+        @* RF09: el conductor puede cancelar antes de recoger al pasajero; en curso ya no. *@
+        <a asp-action="Cancelar" asp-route-id="@Model.Id" class="btn btn-outline-danger w-100">Cancelar viaje</a>
+    }
+    else if (estado == EstadoViaje.EnCurso)
+    {
+        <form asp-action="Finalizar" asp-route-id="@Model.Id" method="post">
+            <button type="submit" class="btn btn-vs btn-grande w-100">Finalizar viaje</button>
+        </form>
+    }
+    else
+    {
+        <a asp-action="Disponibles" class="btn btn-vs btn-grande w-100">Volver a los viajes</a>
+    }
 }

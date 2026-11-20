@@ -1,0 +1,21 @@
+# Lo que NO se manda a Docker al construir la imagen.
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/*.user
+**/*.suo
+.git/
+.github/
+.gitignore
+docs/
+pruebas-e2e/
+**/node_modules/
+**/App_Data/
+VuelvoSeguro/VuelvoSeguro.Tests/
+**/*.md
+.env
+*.env
+Dockerfile
+docker-compose*.yml
+.dockerignore

@@ -21,7 +21,10 @@
     </div>
 }
 
-<form asp-action="Publicar" method="post">
+<form asp-action="Publicar" method="post" id="form-publicar">
+    @* Coordenadas del celular, las completa wwwroot/js/ubicacion.js con navigator.geolocation. *@
+    <input type="hidden" id="latitud" name="latitud" />
+    <input type="hidden" id="longitud" name="longitud" />
     <div class="row align-items-center g-4">
         <div class="col-md-6 text-center my-4 my-md-5">
             <button type="submit" class="btn btn-vs boton-casa" disabled="@(!seguroVigente)">Volver<br>a casa</button>
@@ -32,9 +35,11 @@
                     <div class="d-flex gap-2 align-items-start py-1">
                         <span class="pin origen mt-1"></span>
                         <div class="flex-grow-1">
-                            <label for="origen" class="dato">Origen (dónde estás)</label>
+                            <label for="origen" class="dato">Origen (tu ubicación)</label>
+                            <div id="ubicacion-estado" class="small text-body-secondary mt-1" aria-live="polite">Buscando tu ubicación…</div>
                             <input id="origen" name="origen" class="form-control form-control-sm mt-1" maxlength="150" required
                                    placeholder="Ej.: Bar La Esquina, Av. Corrientes 1800" value="@(TempData["Origen"] as string)" />
+                            <button type="button" id="ubicacion-reintentar" class="btn btn-link btn-sm p-0 mt-1 d-none">Volver a intentar con mi ubicación</button>
                         </div>
                     </div>
                     <div class="d-flex gap-2 align-items-start py-1">
@@ -57,3 +62,7 @@
         </div>
     </div>
 </form>
+
+@section Scripts {
+    <script src="~/js/ubicacion.js" asp-append-version="true"></script>
+}

@@ -30,6 +30,9 @@ namespace VuelvoSeguro.Models
         public string? RutaLicencia { get; set; }
         public string? RutaAntecedentes { get; set; }
 
+        // RNF08: fecha en que aceptó los términos y condiciones al registrarse.
+        public DateTime? FechaAceptacionTerminos { get; set; }
+
         public int EstadoUsuarioId { get; set; }
         public EstadoUsuario? EstadoUsuario { get; set; }
 

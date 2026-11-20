@@ -7,7 +7,7 @@
 }
 @section Head {
     @* La lista se actualiza sola cada 20 segundos para mostrar los viajes nuevos. *@
-    <meta http-equiv="refresh" content="20" />
+    <meta name="vs-actualizar" content="20" />
 }
 
 <h4 class="mb-1">Viajes disponibles</h4>
@@ -42,6 +42,10 @@
                         <span class="badge text-bg-light border">Publicado @v.FechaPublicacion.ToString("HH:mm")</span>
                     </div>
                     <div class="small"><span class="dato">Origen</span><br>@v.DireccionOrigen</div>
+                    @if (v.TieneUbicacion)
+                    {
+                        <a href="@v.LinkMapaOrigen" target="_blank" rel="noopener" class="small">Ver ubicación en el mapa</a>
+                    }
                     <div class="small mt-1"><span class="dato">Destino</span><br>@v.DireccionDestino</div>
                     <div class="small text-body-secondary mt-1">Auto: @v.Vehiculo!.Marca @v.Vehiculo.Modelo · caja @(v.Vehiculo.EsAutomatico ? "automática" : "manual")</div>
                     <form asp-action="Aceptar" asp-route-id="@v.Id" method="post" class="mt-auto pt-3">

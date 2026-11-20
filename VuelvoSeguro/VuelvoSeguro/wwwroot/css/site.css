@@ -93,3 +93,10 @@ body { background: var(--vs-stage); min-height: 100vh; }
   .escritorio .lateral { display: flex; gap: .25rem; overflow-x: auto; }
   .escritorio .lateral a, .escritorio .lateral span.deshabilitado { width: auto; white-space: nowrap; }
 }
+
+/* Historial (RF10): los puntos de origen y destino son más chicos dentro de la lista. */
+.historial .pin { width: 10px; height: 10px; border-width: 2px; box-shadow: none; vertical-align: middle; }
+
+/* Términos y condiciones (RNF08). */
+.terminos h6 { margin-top: 1.25rem; font-weight: 700; }
+.terminos p, .terminos li { font-size: .95rem; }

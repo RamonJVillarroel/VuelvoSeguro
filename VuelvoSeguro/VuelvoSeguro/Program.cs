@@ -31,6 +31,16 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Cuenta/Login";
     options.AccessDeniedPath = "/Cuenta/AccesoDenegado";
     options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    // RNF03: la cookie de sesión no se puede leer desde JavaScript ni se manda desde otros sitios.
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
+// RNF03: con HTTPS, el navegador recuerda durante un año que solo debe entrar por HTTPS.
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromDays(365);
+    options.IncludeSubDomains = true;
 });
 
 // Revisa cada minuto si la sesión sigue siendo válida (por ejemplo, si el usuario fue suspendido).
@@ -48,11 +58,12 @@ await DatosIniciales.CargarAsync(app.Services);
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+// RNF03: todo el tráfico se redirige a HTTPS y cada respuesta lleva los encabezados de seguridad.
 app.UseHttpsRedirection();
+app.UseEncabezadosSeguridad();
 app.UseRouting();
 
 app.UseAuthentication();

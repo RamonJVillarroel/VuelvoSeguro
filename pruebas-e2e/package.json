@@ -1,0 +1,7 @@
+{
+  "name": "vuelvoseguro-pruebas-e2e",
+  "private": true,
+  "description": "Pruebas de punta a punta de VuelvoSeguro con Playwright",
+  "scripts": { "test": "node e2e.js" },
+  "dependencies": { "playwright-core": "1.49.1" }
+}

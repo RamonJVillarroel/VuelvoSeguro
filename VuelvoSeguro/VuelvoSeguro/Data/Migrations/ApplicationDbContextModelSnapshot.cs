@@ -284,6 +284,9 @@ namespace VuelvoSeguro.Data.Migrations
                     b.Property<int>("EstadoUsuarioId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("FechaAceptacionTerminos")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("FechaAprobacion")
                         .HasColumnType("datetime2");
 
@@ -412,6 +415,9 @@ namespace VuelvoSeguro.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CanceladoPorId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ConductorId")
                         .HasColumnType("int");
 
@@ -428,6 +434,9 @@ namespace VuelvoSeguro.Data.Migrations
                     b.Property<int>("EstadoViajeId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("FechaCancelacion")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("FechaPublicacion")
                         .HasColumnType("datetime2");
 
@@ -441,6 +450,12 @@ namespace VuelvoSeguro.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<double?>("OrigenLatitud")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("OrigenLongitud")
+                        .HasColumnType("float");
+
                     b.Property<int>("PasajeroId")
                         .HasColumnType("int");
 
@@ -448,6 +463,8 @@ namespace VuelvoSeguro.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CanceladoPorId");
 
                     b.HasIndex("ConductorId");
 
@@ -535,6 +552,11 @@ namespace VuelvoSeguro.Data.Migrations
 
             modelBuilder.Entity("VuelvoSeguro.Models.Viaje", b =>
                 {
+                    b.HasOne("VuelvoSeguro.Models.Usuario", "CanceladoPor")
+                        .WithMany()
+                        .HasForeignKey("CanceladoPorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("VuelvoSeguro.Models.Usuario", "Conductor")
                         .WithMany("ViajesComoConductor")
                         .HasForeignKey("ConductorId")
@@ -557,6 +579,8 @@ namespace VuelvoSeguro.Data.Migrations
                         .HasForeignKey("VehiculoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("CanceladoPor");
 
                     b.Navigation("Conductor");
 

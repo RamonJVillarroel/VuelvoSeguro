@@ -1,0 +1,61 @@
+@model Viaje
+@{
+    ViewData["Title"] = "Cancelar viaje";
+    ViewData["Ancho"] = "medio";
+    var esConductor = User.IsInRole(Rol.Conductor);
+    ViewData["Nav"] = esConductor ? "viajes" : "inicio";
+    var motivos = ViewData["Motivos"] as string[] ?? Array.Empty<string>();
+}
+
+<h4 class="mb-1">Cancelar viaje</h4>
+<p class="text-body-secondary small">
+    @(esConductor
+        ? "El viaje se cancela y el pasajero lo ve en su pantalla. Si necesita volver, puede pedir otro."
+        : "Si cancelás, el viaje deja de estar publicado" + (Model.ConductorId is null ? "." : " y le avisamos a tu conductor."))
+</p>
+
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-danger small py-2" role="alert">@error</div>
+}
+
+<partial name="_Recorrido" model="Model" />
+
+<form asp-action="Cancelar" asp-route-id="@Model.Id" method="post" id="formCancelar">
+    <fieldset class="mb-3">
+        <legend class="h6">¿Por qué cancelás? <span class="text-danger">*</span></legend>
+        <div class="list-group">
+            @for (var i = 0; i < motivos.Length; i++)
+            {
+                <label class="list-group-item d-flex gap-2 py-3">
+                    <input class="form-check-input flex-shrink-0" type="radio" name="motivo" value="@motivos[i]" required />
+                    <span>@motivos[i]</span>
+                </label>
+            }
+            <label class="list-group-item d-flex gap-2 py-3">
+                <input class="form-check-input flex-shrink-0" type="radio" name="motivo" value="@CancelacionHelper.Otro" id="motivoOtro" required />
+                <span>Otro motivo</span>
+            </label>
+        </div>
+    </fieldset>
+    <div class="mb-3 d-none" id="bloqueOtro">
+        <label for="otroMotivo" class="form-label">Contanos el motivo</label>
+        <textarea id="otroMotivo" name="otroMotivo" class="form-control" rows="2" maxlength="@ViajeService.LargoMaximoMotivo"></textarea>
+        <div class="form-text">Hasta @ViajeService.LargoMaximoMotivo caracteres.</div>
+    </div>
+    <button type="submit" class="btn btn-danger btn-grande w-100 mb-2">Cancelar el viaje</button>
+    <a asp-action="Viaje" asp-route-id="@Model.Id" class="btn btn-outline-secondary w-100">Volver sin cancelar</a>
+</form>
+
+@section Scripts {
+    <script>
+        // "Otro motivo" muestra el cuadro de texto y lo vuelve obligatorio.
+        document.querySelectorAll('input[name="motivo"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                var otro = document.getElementById('motivoOtro').checked;
+                document.getElementById('bloqueOtro').classList.toggle('d-none', !otro);
+                document.getElementById('otroMotivo').required = otro;
+            });
+        });
+    </script>
+}

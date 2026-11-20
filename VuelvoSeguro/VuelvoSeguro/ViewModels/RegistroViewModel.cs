@@ -46,6 +46,11 @@ namespace VuelvoSeguro.ViewModels
         [Compare(nameof(Password), ErrorMessage = "Las contraseñas no coinciden.")]
         [Display(Name = "Repetir contraseña")]
         public string ConfirmarPassword { get; set; } = string.Empty;
+
+        // RNF08: sin aceptar los términos y condiciones no se crea la cuenta.
+        [DebeAceptarse]
+        [Display(Name = "Acepto los términos y condiciones")]
+        public bool AceptaTerminos { get; set; }
     }
 
     public class RegistroPasajeroViewModel : RegistroViewModel
